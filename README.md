@@ -15,8 +15,8 @@ HR Managers and Employees.
 
 ## 🔗 Live Link
 
-Frontend → will be give
-Backend → will be give
+-   Frontend → will be give
+-   Backend → will be give
 
 
 ## ✨ Features
@@ -35,9 +35,9 @@ Backend → will be give
 
 ## 🧩 Major System Modules
 
--   Asset Management\
--   Request Approval\
--   Package Subscription\
+-   Asset Management
+-   Request Approval
+-   Package Subscription
 -   Company & Employee Management
 
 ## 🖥️ Tech Stack
@@ -52,6 +52,6 @@ Node.js, Express.js, MongoDB, Firebase, Stripe
 
 ## 📤 Deployment site
 
-Frontend → https://www.netlify.com/
-Backend → https://vercel.com/nilandus-projects
+-   Frontend → https://www.netlify.com/
+-   Backend → https://vercel.com/nilandus-projects
 
