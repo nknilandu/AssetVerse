@@ -10,6 +10,9 @@ import AuthLayout from "../layout/AuthLayout/AuthLayout";
 import RootLayout from "../layout/RootLayout/RootLayout";
 import AppNotFound from "../pages/errorpages/AppNotFound/AppNotFound";
 import Login from "../pages/Login/Login";
+import HrRegister from "../pages/HrRegister/HrRegister";
+import EmployeeRegister from "../pages/EmployeeRegister/EmployeeRegister";
+import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +40,16 @@ const router = createBrowserRouter([
         Component: Login
       },
       {
-        path: "register",
+        path: "employee-registration",
+        Component: EmployeeRegister
+      },
+      {
+        path: "hr-registration",
+        Component: HrRegister
+      },
+      {
+        path: "/forgot-password",
+        Component: ForgotPassword
       },
       {
         path: "*",
