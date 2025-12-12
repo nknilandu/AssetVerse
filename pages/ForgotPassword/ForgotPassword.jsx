@@ -1,25 +1,34 @@
 import { Link, useNavigate } from "react-router";
-import { use } from "react";
-// import { AuthContext } from "../../provider/AuthProvider";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../provider/AuthProvider";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-
 export default function ForgotPassword() {
-//   const { forgotPassword } = use(AuthContext);
-//   const navigate = useNavigate();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
+  const [stateLoading, setStateLoading] = useState(false);
 
-    // forgotPassword(email)
-    //   .then(() => {
-    //     toast.success("Successfully email sent!");
-    //     navigate("/auth/login");
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.message);
-    //   });
+  const { forgotPassword } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const onSubmit = (data) => {
+    setStateLoading(true);
+    forgotPassword(data.email)
+      .then(() => {
+        toast.success("Successfully email sent!");
+        setStateLoading(false);
+
+        navigate("/login");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        setStateLoading(false);
+      });
   };
 
   return (
@@ -28,9 +37,7 @@ export default function ForgotPassword() {
       <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-full max-w-md mx-auto">
         {/* Header */}
         <div className="text-center mb-4">
-          <h1 className="text-2xl font-semibold mb-2">
-            Forgot Your Password?
-          </h1>
+          <h1 className="text-2xl font-semibold mb-2">Forgot Your Password?</h1>
           <p className=" text-sm leading-relaxed text-base-content/30">
             Don't worry. We will send a password reset link to your email.
             Please check your inbox or spam box to find mail.
@@ -38,36 +45,52 @@ export default function ForgotPassword() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <div className="space-y-2">
             {/* Email Field */}
             <div>
-              <label className="block text-sm label mb-1">
-                Email
-              </label>
+              <label className="block text-sm label mb-1">Email</label>
               <input
+                {...register("email", {
+                  required: "Email address is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Enter a valid email address",
+                  },
+                })}
                 type="email"
                 name="email"
                 placeholder="example@email.com"
-                required
-                className="input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
-             />
+                className="input text-sm w-full py-2 mb-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+              />
+
+              {/* error message */}
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full p-2 mt-2 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors"
+            disabled={stateLoading}
+            className={`w-full p-2 mt-2 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors ${
+              stateLoading ? "bg-primary/50" : "bg-primary"
+            }`}
           >
-            Send a mail
+            {stateLoading ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              "Send a mail"
+            )}
           </button>
 
           <div className="text-center mt-3">
             <p className="text-base-content/50">
               Login into another account?{" "}
               <Link
-                to="/login"
+                to={stateLoading || "/login"}
                 className="hover:text-primary text-secondary font-semibold transition-colors"
               >
                 Log in

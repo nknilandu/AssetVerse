@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiBox, FiFileText, FiUserPlus } from "react-icons/fi";
@@ -11,6 +11,8 @@ import { MdTrendingUp } from "react-icons/md";
 import { RiSettings2Line } from "react-icons/ri";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../provider/AuthProvider";
+import toast from "react-hot-toast";
 
 const HrRegister = () => {
   const {
@@ -18,11 +20,15 @@ const HrRegister = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  //   const location = useLocation();
-  //   const useNavigate = useNavigate();
-  //   console.log(location)
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [stateLoading, setStateLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+
+  const { createUser, setUser } = useContext(AuthContext);
+
   const togglePassword = () => {
     setShowPass(!showPass);
   };
@@ -30,27 +36,48 @@ const HrRegister = () => {
   // login
   const onSubmit = (data) => {
     console.log(data);
-    // const email = e.target.email.value;
-    // const password = e.target.password.value;
 
-    // if (errorMsg) {
-    //   toast.error("Please fix the password errors before login.");
-    //   return;
-    // }
+    // companyName
+    // date
+    // email
+    // file
+    // name
+    // password
 
-    // loginUser(email, password)
-    //   .then((res) => {
-    //     const user = res.user;
-    //     setUser(user);
-    //     toast.success("Successfully Loged in.");
-    //     navigate(`${location.state ? location.state : "/"}`);
+    // loading
+    setStateLoading(true);
 
-    //     e.target.reset();
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.message);
-    //     console.log(error.message);
-    //   });
+    createUser(data.email, data.password)
+      .then((res) => {
+        // success
+        const user = res.user;
+        setUser(user);
+
+        toast.success("Successfully Loged in.");
+        navigate(`${location.state ? location.state : "/"}`);
+
+        setStateLoading(false);
+
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+      })
+      .catch((e) => {
+        // error
+        console.log(e.message);
+        toast.error(e.message);
+
+        setStateLoading(false);
+      });
   };
 
   return (
@@ -152,7 +179,6 @@ const HrRegister = () => {
                     type="email"
                     name="email"
                     placeholder="example@email.com"
-                    required
                     className="input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                   />
                 </div>
@@ -178,7 +204,6 @@ const HrRegister = () => {
                       type={showPass ? "text" : "password"}
                       name="password"
                       placeholder="At least 8 characters"
-                      required
                       className="input text-sm w-full py-2 px-4 pr-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                     />
 
@@ -204,7 +229,9 @@ const HrRegister = () => {
                 ) : errors.date ? (
                   <p className="text-sm text-red-500">{errors.date.message}</p>
                 ) : errors.companyName ? (
-                  <p className="text-sm text-red-500">{errors.companyName.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.companyName.message}
+                  </p>
                 ) : errors.file ? (
                   <p className="text-sm text-red-500">{errors.file.message}</p>
                 ) : errors.email ? (
@@ -220,9 +247,16 @@ const HrRegister = () => {
               {/* Submit login Button */}
               <button
                 type="submit"
-                className="w-full p-2 mt-5 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors"
+                disabled={stateLoading}
+                className={`w-full p-2 mt-5 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors ${
+                  stateLoading ? "bg-primary/50" : "bg-primary"
+                }`}
               >
-                Create Account
+                {stateLoading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  "Create Account"
+                )}
               </button>
 
               {/* Divider */}
@@ -233,7 +267,7 @@ const HrRegister = () => {
               </div>
 
               <div className="text-center mt-6">
-                <Link to="/employee-registration">
+                <Link to={stateLoading || "/employee-registration"}>
                   <div className=" border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-2 w-full flex flex-col items-center justify-center">
                     <div className="flex items-center justify-center">
                       <LuUser size={20} className="text-warning mr-2" />
@@ -249,15 +283,15 @@ const HrRegister = () => {
 
                 <p className="text-base-content/50 my-4">
                   Already have an account?{" "}
-                  <Link to="/login">
-                    <span className="text-secondary">Login</span>
+                  <Link to={stateLoading || "/login"}>
+                    <span className="text-secondary font-semibold">Login</span>
                   </Link>
                 </p>
               </div>
             </form>
           </div>
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
-          <div className="divider divider-horizontal mt-20"></div>
+          <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
           {/* ++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="flex-1 w-md">
             <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineAim } from "react-icons/ai";
 import { FiLock } from "react-icons/fi";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
@@ -8,6 +8,8 @@ import { PiCertificate } from "react-icons/pi";
 import { Link, useLocation, useNavigate } from "react-router";
 import Logo from "../../components/Logo/Logo";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../provider/AuthProvider";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const {
@@ -15,55 +17,46 @@ const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
   const location = useLocation();
-  //   const useNavigate = useNavigate();
-  //   console.log(location)
+  const navigate = useNavigate();
+
+  const { loginUser, setUser } = useContext(AuthContext);
 
   const [showPass, setShowPass] = useState(false);
+  const [stateLoading, setStateLoading] = useState(false);
 
   const togglePassword = () => {
     setShowPass(!showPass);
   };
 
-  // const checkPassword = (event) => {
-  //   const password = event.target.value;
-
-  //   if (password.length < 6) {
-  //     alert("Password must be at least 6 characters long.");
-  //   } else if (!/[A-Z]/.test(password)) {
-  //     alert("Password must contain at least one uppercase letter.");
-  //   } else if (!/[a-z]/.test(password)) {
-  //     alert("Password must contain at least one lowercase letter.");
-  //   } else {
-  //     alert("");
-  //   }
-  // };
-
-  // login
+  // login user
   const onSubmit = (data) => {
-    console.log(data);
-    // e.preventDefault();
-    // const email = e.target.email.value;
-    // const password = e.target.password.value;
+    setStateLoading(true);
+    loginUser(data.email, data.password)
+      .then((res) => {
+        // success
 
-    // if (errorMsg) {
-    //   toast.error("Please fix the password errors before login.");
-    //   return;
-    // }
+        const user = res.user;
+        setUser(user);
+        toast.success("Successfully Loged in.");
+        navigate(`${location.state ? location.state : "/"}`);
 
-    // loginUser(email, password)
-    //   .then((res) => {
-    //     const user = res.user;
-    //     setUser(user);
-    //     toast.success("Successfully Loged in.");
-    //     navigate(`${location.state ? location.state : "/"}`);
+        setStateLoading(false);
+      })
+      .catch((e) => {
+        // error
+        console.log(e.message);
+        toast.error(e.message);
 
-    //     e.target.reset();
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.message);
-    //     console.log(error.message);
-    //   });
+        setStateLoading(false);
+      });
+    //
+    //
+    //
+    //
+    //
+    //
   };
 
   return (
@@ -146,7 +139,6 @@ const Login = () => {
               </div>
               <div>
                 {/* error msg */}
-                {/* error msg */}
                 {errors.email ? (
                   <p className="text-xs text-red-500">{errors.email.message}</p>
                 ) : (
@@ -160,7 +152,7 @@ const Login = () => {
 
               {/* Forgot Password Link */}
               <div className="text-right">
-                <Link to="/forgot-password">
+                <Link to={stateLoading || "/forgot-password"}>
                   <button
                     type="button"
                     className="text-primary hover:text-primary/50 transition-colors"
@@ -173,9 +165,16 @@ const Login = () => {
               {/* Submit login Button */}
               <button
                 type="submit"
-                className="w-full p-2 mt-2 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors"
+                disabled={stateLoading}
+                className={`w-full p-2 mt-2 hover:bg-primary/50 text-white font-md rounded-lg transition-colors ${
+                  stateLoading ? " bg-primary/50" : "bg-primary"
+                }`}
               >
-                Log in
+                {stateLoading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  "Log in"
+                )}
               </button>
 
               {/* Divider */}
@@ -190,7 +189,7 @@ const Login = () => {
                   Don't you have an account?
                 </p>
                 <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
-                  <Link to="/employee-registration">
+                  <Link to={stateLoading || "/employee-registration"}>
                     <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
                       <LuUser size={20} className="text-warning" />
                       <p className="text-md font-semibold mt-2">Employee</p>
@@ -199,7 +198,7 @@ const Login = () => {
                       </p>
                     </div>
                   </Link>
-                  <Link to="/hr-registration">
+                  <Link to={stateLoading || "/hr-registration"}>
                     <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
                       <LuShieldCheck size={20} className="text-info" />
                       <p className="text-md font-semibold mt-2">HR Manager</p>
@@ -213,7 +212,7 @@ const Login = () => {
             </form>
           </div>
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
-          <div className="divider divider-horizontal mt-20"></div>
+          <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
           {/* ++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="flex-1 w-md">
             <div>

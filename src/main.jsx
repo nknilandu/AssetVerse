@@ -13,6 +13,7 @@ import Login from "../pages/Login/Login";
 import HrRegister from "../pages/HrRegister/HrRegister";
 import EmployeeRegister from "../pages/EmployeeRegister/EmployeeRegister";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
+import AuthProvider from "../provider/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

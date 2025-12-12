@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineAim } from "react-icons/ai";
 import { FiBox } from "react-icons/fi";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 import { LuLightbulb, LuShieldCheck, LuUsers } from "react-icons/lu";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import Logo from "../../components/Logo/Logo";
 import { MdInfoOutline, MdOutlineLock } from "react-icons/md";
 import { RiBuilding2Line } from "react-icons/ri";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../provider/AuthProvider";
+import toast from "react-hot-toast";
 
 const EmployeeRegister = () => {
-  //   const location = useLocation();
-  //   const useNavigate = useNavigate();
-  //   console.log(location)
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { createUser, setUser } = useContext(AuthContext);
+  const [stateLoading, setStateLoading] = useState(false);
 
   const {
     register,
@@ -26,31 +30,41 @@ const EmployeeRegister = () => {
     setShowPass(!showPass);
   };
 
-  // login
+  // create user
   const onSubmit = (data) => {
-    console.log(data);
-    // e.preventDefault();
-    // const email = e.target.email.value;
-    // const password = e.target.password.value;
+    setStateLoading(true);
+    createUser(data.email, data.password)
+      .then((res) => {
+        // success
+        const user = res.user;
+        setUser(user);
 
-    // if (errorMsg) {
-    //   toast.error("Please fix the password errors before login.");
-    //   return;
-    // }
+        toast.success("Successfully Loged in.");
+        navigate(`${location.state ? location.state : "/"}`);
 
-    // loginUser(email, password)
-    //   .then((res) => {
-    //     const user = res.user;
-    //     setUser(user);
-    //     toast.success("Successfully Loged in.");
-    //     navigate(`${location.state ? location.state : "/"}`);
+        setStateLoading(false);
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+      })
+      .catch((e) => {
+        // error
+        console.log(e.message);
+        toast.error(e.message);
 
-    //     e.target.reset();
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.message);
-    //     console.log(error.message);
-    //   });
+        setStateLoading(false);
+      });
   };
 
   return (
@@ -187,9 +201,16 @@ const EmployeeRegister = () => {
               {/* Submit login Button */}
               <button
                 type="submit"
-                className="w-full p-2 mt-5 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors"
+                disabled={stateLoading}
+                className={`w-full p-2 mt-5 bg-primary hover:bg-primary/50 text-white font-md rounded-lg transition-colors ${
+                  stateLoading ? "bg-primary/50" : "bg-primary"
+                }`}
               >
-                Create Account
+                {stateLoading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  "Create Account"
+                )}
               </button>
 
               {/* Divider */}
@@ -200,7 +221,7 @@ const EmployeeRegister = () => {
               </div>
 
               <div className="text-center mt-6">
-                <Link to="/hr-registration">
+                <Link to={stateLoading || "/hr-registration"}>
                   <div className=" border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-2 w-full flex flex-col items-center justify-center">
                     <div className="flex items-center justify-center">
                       <LuShieldCheck size={20} className="text-info mr-2" />
@@ -216,15 +237,16 @@ const EmployeeRegister = () => {
 
                 <p className="text-base-content/50 my-4">
                   Already have an account?{" "}
-                  <Link to="/login">
-                    <span className="text-secondary">Login</span>
+                  <Link to={stateLoading || "/login"}>
+                    <span className="text-secondary font-semibold">Login</span>
                   </Link>
                 </p>
               </div>
             </form>
           </div>
+
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
-          <div className="divider divider-horizontal mt-20"></div>
+          <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
           {/* ++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="flex-1 w-md">
             <div>
