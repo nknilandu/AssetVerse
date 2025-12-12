@@ -15,7 +15,7 @@ const EmployeeRegister = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { createUser, setUser } = useContext(AuthContext);
+  const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
   const [stateLoading, setStateLoading] = useState(false);
 
   const {
@@ -39,24 +39,47 @@ const EmployeeRegister = () => {
         const user = res.user;
         setUser(user);
 
-        toast.success("Successfully Loged in.");
-        navigate(`${location.state ? location.state : "/"}`);
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          dateOfBirth: data.date,
+          role: "employee",
+          createdAt: new Date(),
+        };
 
-        setStateLoading(false);
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
+        //update user profile
+        updateUserProfile({
+          displayName: data.name,
+        })
+          .then(() => {
+            toast.success("profile update");
+          })
+          .catch(() => {
+            toast.error("could not update profile");
+          });
+
+        // add data at database
+        fetch("http://localhost:2031/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${user.accessToken}`,
+          },
+          body: JSON.stringify(userInfo),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.insertedId) {
+              // success
+              toast.success("Successfully Account Created");
+              navigate(`${location.state ? location.state : "/"}`);
+            } else {
+              // failed
+              toast.error("Failed to save user");
+            }
+            setStateLoading(false);
+          });
       })
       .catch((e) => {
         // error

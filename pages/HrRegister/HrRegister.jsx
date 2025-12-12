@@ -27,7 +27,7 @@ const HrRegister = () => {
   const [stateLoading, setStateLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { createUser, setUser } = useContext(AuthContext);
+  const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
 
   const togglePassword = () => {
     setShowPass(!showPass);
@@ -35,14 +35,7 @@ const HrRegister = () => {
 
   // login
   const onSubmit = (data) => {
-    console.log(data);
-
-    // companyName
-    // date
-    // email
-    // file
-    // name
-    // password
+    // console.log(data);
 
     // loading
     setStateLoading(true);
@@ -53,29 +46,88 @@ const HrRegister = () => {
         const user = res.user;
         setUser(user);
 
-        toast.success("Successfully Loged in.");
-        navigate(`${location.state ? location.state : "/"}`);
+        //upload logo and get link
+        const profileImg = data.file[0];
+        const formData = new FormData();
+        formData.append("image", profileImg);
 
-        setStateLoading(false);
+        // upload image to imgbb
+        fetch(
+          `https://api.imgbb.com/1/upload?expiration=600&key=${
+            import.meta.env.VITE_IMG_CLIENT_KEY
+          }`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        )
+          .then((res) => res.json())
+          .then((result) => {
+            // upload success
+            const photoLink = result.data.display_url;
 
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
+            const userInfo = {
+              name: data.name,
+              companyName: data.companyName,
+              companyLogo: photoLink,
+              email: data.email,
+              password: data.password,
+              dateOfBirth: data.date,
+              role: "hr",
+              packageLimit: 5,
+              currentEmployees: 0,
+              subscription: "basic",
+              createdAt: new Date(),
+            };
+            
+
+            //update user profile
+            updateUserProfile({
+              displayName: data.name,
+              photoURL: photoLink,
+            })
+              .then(() => {
+                toast.success("profile update");
+              })
+              .catch(() => {
+                toast.error("could not update profile");
+              });
+
+            // add data at database
+            fetch("http://localhost:2031/users", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                authorization: `Bearer ${user.accessToken}`,
+              },
+              body: JSON.stringify(userInfo),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.insertedId) {
+                  // success
+                  toast.success("Successfully Account Created");
+                  navigate(`${location.state ? location.state : "/"}`);
+                } else {
+                  // failed to add data at database
+                  toast.error("Failed to save user");
+                }
+                setStateLoading(false);
+              });
+          })
+
+          .catch((e) => {
+            // failed to upload image
+            toast.error("Failed to upload company logo");
+            console.log(e.message);
+            setStateLoading(false);
+          });
       })
+
       .catch((e) => {
-        // error
+        // firebase error
         console.log(e.message);
         toast.error(e.message);
-
         setStateLoading(false);
       });
   };
@@ -161,7 +213,6 @@ const HrRegister = () => {
                       required: "company logo is required",
                     })}
                     type="file"
-                    name="companyLogo"
                     className="file-input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                   />
                 </div>
