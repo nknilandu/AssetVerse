@@ -8,7 +8,7 @@ import { TfiFacebook } from "react-icons/tfi";
 
 const Footer = () => {
   return (
-    <div className="bg-base-200 text-base-content py-5">
+    <div className="bg-base-300 text-base-content py-5">
       <div className="max-w-7xl mx-auto">
         <footer className="flex flex-col sm:flex-row justify-center sm:items-center footer sm:footer-horizontal p-10">
         <aside className="flex-2">
@@ -21,17 +21,17 @@ const Footer = () => {
           </p>
           <div className="flex gap-3 mt-2">
             <a href="">
-              <div className="bg-base-300 p-2 rounded-full">
+              <div className="bg-base-200 p-2 rounded-full">
                 <TfiFacebook />
               </div>
             </a>
             <a href="">
-              <div className="bg-base-300 p-2 rounded-full">
+              <div className="bg-base-200 p-2 rounded-full">
                 <GrInstagram />
               </div>
             </a>
             <a href="">
-              <div className="bg-base-300 p-2 rounded-full">
+              <div className="bg-base-200 p-2 rounded-full">
                 <FaXTwitter />
               </div>
             </a>
