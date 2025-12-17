@@ -79,7 +79,6 @@ const HrRegister = () => {
               subscription: "basic",
               createdAt: new Date(),
             };
-            
 
             //update user profile
             updateUserProfile({
@@ -88,31 +87,31 @@ const HrRegister = () => {
             })
               .then(() => {
                 toast.success("profile update");
+
+                // add data at database
+                fetch("http://localhost:2031/users", {
+                  method: "POST",
+                  headers: {
+                    "content-type": "application/json",
+                    authorization: `Bearer ${user.accessToken}`,
+                  },
+                  body: JSON.stringify(userInfo),
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.insertedId) {
+                      // success
+                      toast.success("Successfully Account Created");
+                      navigate(`${location.state ? location.state : "/"}`);
+                    } else {
+                      // failed to add data at database
+                      toast.error("Failed to save user");
+                    }
+                    setStateLoading(false);
+                  });
               })
               .catch(() => {
                 toast.error("could not update profile");
-              });
-
-            // add data at database
-            fetch("http://localhost:2031/users", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-                authorization: `Bearer ${user.accessToken}`,
-              },
-              body: JSON.stringify(userInfo),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (data.insertedId) {
-                  // success
-                  toast.success("Successfully Account Created");
-                  navigate(`${location.state ? location.state : "/"}`);
-                } else {
-                  // failed to add data at database
-                  toast.error("Failed to save user");
-                }
-                setStateLoading(false);
               });
           })
 

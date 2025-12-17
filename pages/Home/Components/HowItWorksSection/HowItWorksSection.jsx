@@ -43,7 +43,7 @@ export function HowItWorksSection() {
       <section className="mx-auto max-w-7xl px-4 text-center">
       <ul className="steps  steps-vertical md:steps-horizontal  w-full">
         {steps.map((step, idx) => (
-          <li key={idx} className={`step ${step?.wrapper && 'step-primary'}`} >
+          <li key={idx} className={`step ${step?.wrapper && 'step-secondary'}`} >
             <div
               
               className=" px-6 transition flex flex-col items-start md:items-center"

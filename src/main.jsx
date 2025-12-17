@@ -14,6 +14,8 @@ import HrRegister from "../pages/HrRegister/HrRegister";
 import EmployeeRegister from "../pages/EmployeeRegister/EmployeeRegister";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import AuthProvider from "../provider/AuthProvider";
+import AssetList from "../pages/HrManagerPages/AssetList/AssetList";
+import Profile from "../pages/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -26,9 +28,13 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
+        path: "profile",
+        Component: Profile
+      },
+      {
         path: "*",
         Component: PageNotFound,
-      },
+      }
     ],
   },
   {
@@ -49,9 +55,10 @@ const router = createBrowserRouter([
         Component: HrRegister
       },
       {
-        path: "/forgot-password",
+        path: "forgot-password",
         Component: ForgotPassword
       },
+      
       {
         path: "*",
         Component: PageNotFound,

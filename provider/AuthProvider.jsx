@@ -16,6 +16,7 @@ const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
 
   // create user
   const createUser = (email, password) => {
@@ -50,6 +51,16 @@ const AuthProvider = ({ children }) => {
     });
   }, []);
 
+    useEffect(() => {
+      if (user) {
+        fetch(`http://localhost:2031/users?email=${user.email}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setUserRole(data.role || null);
+          });
+      }
+    }, [user]);
+
   const authData = {
     createUser,
     loginUser,
@@ -58,7 +69,9 @@ const AuthProvider = ({ children }) => {
     user,
     setUser,
     loading,
-    updateUserProfile
+    updateUserProfile,
+    userRole, 
+    setUserRole
   };
 
   return <AuthContext value={authData}>{children}</AuthContext>;

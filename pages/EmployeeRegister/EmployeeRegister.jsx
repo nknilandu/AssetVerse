@@ -33,61 +33,83 @@ const EmployeeRegister = () => {
   // create user
   const onSubmit = (data) => {
     setStateLoading(true);
-    createUser(data.email, data.password)
-      .then((res) => {
-        // success
-        const user = res.user;
-        setUser(user);
+    createUser(data.email, data.password).then((res) => {
+      // success
+      const user = res.user;
+      setUser(user);
 
-        const userInfo = {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-          dateOfBirth: data.date,
-          role: "employee",
-          createdAt: new Date(),
-        };
+      //upload logo and get link
+      const profileImg = data.file[0];
+      const formData = new FormData();
+      formData.append("image", profileImg);
 
-        //update user profile
-        updateUserProfile({
-          displayName: data.name,
-        })
-          .then(() => {
-            toast.success("profile update");
-          })
-          .catch(() => {
-            toast.error("could not update profile");
-          });
-
-        // add data at database
-        fetch("http://localhost:2031/users", {
+      fetch(
+        `https://api.imgbb.com/1/upload?expiration=600&key=${
+          import.meta.env.VITE_IMG_CLIENT_KEY
+        }`,
+        {
           method: "POST",
-          headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${user.accessToken}`,
-          },
-          body: JSON.stringify(userInfo),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.insertedId) {
-              // success
-              toast.success("Successfully Account Created");
-              navigate(`${location.state ? location.state : "/"}`);
-            } else {
-              // failed
-              toast.error("Failed to save user");
-            }
-            setStateLoading(false);
-          });
-      })
-      .catch((e) => {
-        // error
-        console.log(e.message);
-        toast.error(e.message);
+          body: formData,
+        }
+      )
+        .then((res) => res.json())
+        .then((result) => {
+          // upload success
+          const photoLink = result.data.display_url;
 
-        setStateLoading(false);
-      });
+          const userInfo = {
+            name: data.name,
+            photoURL: photoLink,
+            email: data.email,
+            password: data.password,
+            dateOfBirth: data.date,
+            role: "employee",
+            createdAt: new Date(),
+          };
+
+          //update user profile
+          updateUserProfile({
+            displayName: data.name,
+            photoURL: photoLink,
+          })
+            .then(() => {
+              toast.success("profile update");
+
+              // add data at database
+              fetch("http://localhost:2031/users", {
+                method: "POST",
+                headers: {
+                  "content-type": "application/json",
+                  authorization: `Bearer ${user.accessToken}`,
+                },
+                body: JSON.stringify(userInfo),
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.insertedId) {
+                    // success
+
+                    toast.success("Successfully Account Created");
+                    navigate(`${location.state ? location.state : "/"}`);
+                  } else {
+                    // failed
+                    toast.error("Failed to save user");
+                  }
+                  setStateLoading(false);
+                });
+            })
+            .catch((e) => {
+              // error
+              console.log(e.message);
+              toast.error(e.message);
+
+              setStateLoading(false);
+            });
+        })
+        .catch(() => {
+          toast.error("could not update profile");
+        });
+    });
   };
 
   return (
@@ -144,6 +166,17 @@ const EmployeeRegister = () => {
                     type="date"
                     name="date"
                     className="input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                  />
+                </div>
+                {/* logo Field */}
+                <div>
+                  <label className="block label mb-1">Profile Logo</label>
+                  <input
+                    {...register("file", {
+                      required: "profile logo is required",
+                    })}
+                    type="file"
+                    className="file-input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
                   />
                 </div>
                 {/* Email Field */}
