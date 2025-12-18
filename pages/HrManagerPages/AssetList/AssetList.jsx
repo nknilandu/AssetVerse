@@ -5,17 +5,26 @@ import { IoPlanetOutline } from "react-icons/io5";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import { AuthContext } from "../../../provider/AuthProvider";
-
+import Swal from "sweetalert2";
+import { NavLink } from "react-router";
 
 const AssetList = () => {
+
 
     const { user } = useContext(AuthContext)
     const [ assetsData ,setAssetsData] = useState([])
     const [ stateLoading ,setStateLoading] = useState(true)
+     
+
+
 
     useEffect(()=>{       
 
-        fetch(`http://localhost:2031/assets?email=${user.email}`)
+        fetch(`http://localhost:2031/assets?email=${user.email}`, {
+            headers: {
+        authorization: `Bearer ${user.accessToken}`
+      }
+        })
             .then(res=>res.json())
             .then(data=> {
                 setAssetsData(data)
@@ -27,11 +36,66 @@ const AssetList = () => {
                 console.log(e)
             })
 
-    }, [user.email])
+    }, [user])
 
 
     const hanldeDelete = (id) => {
-        console.log(id)
+        // console.log(id)
+
+            Swal.fire({
+      title: "Are you sure want to delete?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      theme: "auto",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // ======================= delete user
+        // console.log(id)
+        fetch(`http://localhost:2031/assets/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${user.accessToken}`,
+            email: user.email,
+          },
+        })
+        
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data)
+            if (data.deletedCount) {
+              // success
+              Swal.fire({
+                theme: "auto",
+                title: "Successfully Asset Deleted!",
+                icon: "success",
+                draggable: false,
+              });
+              // ============ update ui
+              const filterAssets = assetsData.filter((item) => item._id !== id);
+              setAssetsData(filterAssets);
+            } else {
+              // error
+              Swal.fire({
+                theme: "auto",
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+              });
+            }
+          });
+        // ===========
+      }
+    });
+
+
+
+
+
     }
 
 
@@ -43,7 +107,11 @@ const AssetList = () => {
     const searchText = e.target.search.value;
     // console.log(searchText)
 
-    fetch(`http://localhost:2031/assets?email=${user.email}&search=${searchText}`)
+    fetch(`http://localhost:2031/assets?email=${user.email}&search=${searchText}`, {
+            headers: {
+        authorization: `Bearer ${user.accessToken}`
+      
+    }})
             .then(res=>res.json())
             .then(data=> {
                 setAssetsData(data)
@@ -146,9 +214,11 @@ const AssetList = () => {
                 {/* Actions */}
                 <td>
                   <div className="space-x-2 flex">
-                    <button className="btn btn-sm  btn-outline btn-info">
+                    <NavLink to={`/update-asset/${asset._id}`}>
+                        <button className="btn btn-sm  btn-outline btn-info">
                       Edit
                     </button>
+                    </NavLink>
                     <button onClick={()=>hanldeDelete(asset._id)} className="btn btn-sm btn-outline btn-error">
                       Delete
                     </button>

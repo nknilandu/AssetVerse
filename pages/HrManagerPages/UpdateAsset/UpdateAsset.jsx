@@ -1,103 +1,87 @@
-import { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { FiBox } from "react-icons/fi";
+import { useNavigate, useParams } from "react-router";
 import { AuthContext } from "../../../provider/AuthProvider";
+import { FiBox } from "react-icons/fi";
 import Swal from "sweetalert2";
 
-const AddAsset = () => {
+const UpdateAsset = () => {
+  const { id } = useParams();
   const [stateLoading, setStateLoading] = useState(false);
+  const [assetData, setAssetData] = useState(null);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    fetch(`http://localhost:2031/assets?email=${user.email}&id=${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAssetData(data[0] || null);
+      });
+  }, [user, id]);
+
+  useEffect(() => {
+    if (assetData) {
+      setValue("name", assetData.productName);
+      setValue("type", assetData.productType);
+      setValue("quantity", assetData.productQuantity);
+      setValue("imgLink", assetData.productImage);
+    }
+  }, [assetData, setValue]);
+
+  // console.log(assetData)
+
+  // update code
   const onSubmit = (data) => {
     setStateLoading(true);
 
-    // Upload image to ImgBB
-    const imageFile = data.image[0];
-    const formData = new FormData();
-    formData.append("image", imageFile);
+    const updateData = {
+      productImage: data.imgLink,
+      productName: data.name,
+      productQuantity: data.quantity,
+      productType: data.type,
+    };
 
-    fetch(
-      `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_IMG_CLIENT_KEY
-      }`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    )
+    //  ====================
+    fetch(`http://localhost:2031/assets/${assetData._id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${user.accessToken}`,
+        email: user.email,
+      },
+      body: JSON.stringify(updateData),
+    })
       .then((res) => res.json())
       .then((result) => {
-        // upload success
-        const photoLink = result.data.display_url;
-
-        // get hr company name
-        fetch(`http://localhost:2031/users?email=${user.email}`)
-          .then((res) => res.json())
-          .then((temp) => {
-            const companyName = temp.companyName;
-            const companyLogo = temp.companyLogo;
-
-            const assetInfo = {
-              productName: data.name,
-              productImage: photoLink,
-              productType: data.type,
-              productQuantity: Number(data.quantity),
-              availableQuantity: Number(data.quantity),
-              dateAdded: new Date(),
-              hrEmail: user.email,
-              companyName: companyName,
-              companyLogo: companyLogo,
-            };
-
-            //updoad data in server
-            fetch("http://localhost:2031/assets", {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-                authorization: `Bearer ${user.accessToken}`,
-              },
-              body: JSON.stringify(assetInfo),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                if (data.insertedId) {
-                  // success
-                  setStateLoading(false);
-                  reset();
-
-                  Swal.fire({
-                    theme: "auto",
-                    title: "Successfully Asset Added!",
-                    icon: "success",
-                    draggable: false,
-                  });
-                } else {
-                  // not success
-                }
-              })
-              .catch((e) => {
-                setStateLoading(false);
-                toast.error("Couldn't upload data at database");
-                console.error(e.message);
-                return;
-              });
-
-            // ++++++++++++++++++++++++++
-          })
-          .catch((e) => {
-            setStateLoading(false);
-            toast.error("Database error");
-            console.error(e.message);
-            return;
+        setStateLoading(false);
+        // console.log(data)
+        if (result.modifiedCount) {
+          // success
+          Swal.fire({
+            theme: "auto",
+            title: "Successfully Product Updated!",
+            icon: "success",
+            draggable: false,
           });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        // error
+        Swal.fire({
+          theme: "auto",
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
       });
   };
 
@@ -108,10 +92,10 @@ const AddAsset = () => {
         <div className="text-center mb-6">
           <div className="flex items-center justify-center gap-2 mb-2">
             <FiBox className="text-primary" size={22} />
-            <h1 className="text-2xl font-semibold">Add New Asset</h1>
+            <h1 className="text-2xl font-semibold">Update your Asset</h1>
           </div>
           <p className="text-sm text-base-content/40">
-            Register a product into inventory
+            update a product into inventory
           </p>
         </div>
 
@@ -129,12 +113,13 @@ const AddAsset = () => {
             />
           </div>
 
-          {/* Product Image */}
+          {/* Product Image url */}
           <div>
-            <label className="block label mb-1">Product Image</label>
+            <label className="block label mb-1">Product Image Link</label>
             <input
-              {...register("image", { required: "Image is required" })}
-              type="file"
+              {...register("imgLink", { required: "Image is required" })}
+              type="text"
+              placeholder="image url link"
               className="file-input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
             />
           </div>
@@ -184,23 +169,33 @@ const AddAsset = () => {
           </div>
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={stateLoading}
-            className={`w-full mt-4 p-2 rounded-lg text-white transition ${
-              stateLoading ? "bg-primary/50" : "bg-primary hover:bg-primary/80"
-            }`}
-          >
-            {stateLoading ? (
-              <span className="loading loading-spinner loading-sm"></span>
-            ) : (
-              "Add Asset"
-            )}
-          </button>
+          <div className="flex gap-4 mt-8">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex-1 btn btn-soft btn-primary rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={stateLoading}
+              className={`flex-1 p-2 rounded-lg text-white transition ${
+                stateLoading
+                  ? "bg-primary/50"
+                  : "bg-primary hover:bg-primary/80"
+              }`}
+            >
+              {stateLoading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                "Update Asset"
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default AddAsset;
+export default UpdateAsset;

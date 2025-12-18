@@ -26,6 +26,7 @@ import UpgradePackage from "../pages/HrManagerPages/UpgradePackage/UpgradePackag
 import MyAssets from "../pages/EmployeePages/MyAssets/MyAssets";
 import RequestAsset from "../pages/EmployeePages/RequestAsset/RequestAsset";
 import MyTeam from "../pages/EmployeePages/MyTeam/MyTeam";
+import UpdateAsset from "../pages/HrManagerPages/UpdateAsset/UpdateAsset";
 
 const router = createBrowserRouter([
   {
@@ -92,6 +93,12 @@ const router = createBrowserRouter([
         path: "add-asset",
         element: <AdminRoute>
           <AddAsset></AddAsset>
+        </AdminRoute>
+      },
+      {
+        path: "update-asset/:id",
+        element: <AdminRoute>
+          <UpdateAsset></UpdateAsset>
         </AdminRoute>
       },
       {
