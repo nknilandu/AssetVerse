@@ -10,6 +10,7 @@ import { MdAddCircleOutline } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
 import { BiPlanet } from "react-icons/bi";
+import { Toaster } from "react-hot-toast";
 
 const DashboardLayout = () => {
   const { user, userRole } = useContext(AuthContext);
@@ -155,6 +156,7 @@ const DashboardLayout = () => {
             {/* ==================================================================================== */}
 
             <Outlet></Outlet>
+            <Toaster></Toaster>
 
 
 
