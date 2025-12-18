@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { FiLogOut, FiMoon } from "react-icons/fi";
 import { HiMenuAlt1 } from "react-icons/hi";
-import { LuMoonStar, LuUserRound } from "react-icons/lu";
-import { TbSettings2 } from "react-icons/tb";
+import { LuUserRound } from "react-icons/lu";
 import { Link, NavLink, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../../provider/AuthProvider";

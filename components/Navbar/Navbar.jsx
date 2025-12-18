@@ -7,7 +7,7 @@ import NavDrawer from "./components/NavDrawer/NavDrawer.jsx";
 import NavDropDown from "./components/NavDropDown/NavDropDown.jsx";
 
 const Navbar = () => {
-  const { user, loading, logout, userRole } = useContext(AuthContext);
+  const { user, loading, userRole } = useContext(AuthContext);
 
   const { pathname } = useLocation();
   const isRoot = pathname === "/";
@@ -16,11 +16,7 @@ const Navbar = () => {
     <ul className="flex flex-col lg:flex-row gap-3 lg:gap-10">
       {userRole && (
         <li className="hover:text-secondary">
-          <Link
-            to={userRole === "hr" ? "/hr-dashboard" : "/employee-dashboard"}
-          >
-            Dashboard
-          </Link>
+          <Link to="/dashboard">Dashboard</Link>
         </li>
       )}
       {isRoot ? (
@@ -122,23 +118,21 @@ const Navbar = () => {
                   <p className="text-xs ">{user.email}</p>
                 </div>
 
-{/* +++++++++++++++++++ */}
+                {/* +++++++++++++++++++ */}
 
-<details className="dropdown dropdown-end">
-
-                <summary className="avatar ml-3">
-                  <div
-                    className={`${
-                      userRole === "hr" ? "ring-secondary" : "ring-primary"
-                    } ring-offset-base-100 w-7 rounded-full ring-2 ring-offset-2`}
-                  >
-                    <img src={user.photoURL} alt={user.displayName} />
-                  </div>
-                </summary>
-                <NavDropDown></NavDropDown>
+                <details className="dropdown dropdown-end">
+                  <summary className="avatar ml-3">
+                    <div
+                      className={`${
+                        userRole === "hr" ? "ring-secondary" : "ring-primary"
+                      } ring-offset-base-100 w-7 rounded-full ring-2 ring-offset-2`}
+                    >
+                      <img src={user.photoURL} alt={user.displayName} />
+                    </div>
+                  </summary>
+                  <NavDropDown></NavDropDown>
                 </details>
               </div>
-              
             ) : (
               <span className="loading loading-spinner loading-sm  text-primary"></span>
             )

@@ -14,8 +14,18 @@ import HrRegister from "../pages/HrRegister/HrRegister";
 import EmployeeRegister from "../pages/EmployeeRegister/EmployeeRegister";
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import AuthProvider from "../provider/AuthProvider";
-import AssetList from "../pages/HrManagerPages/AssetList/AssetList";
 import Profile from "../pages/Profile/Profile";
+import DashboardLayout from "../layout/DashboardLayout/DashboardLayout";
+import PrivateRoute from "../route/PrivateRoute";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import AddAsset from "../pages/HrManagerPages/AddAsset/AddAsset";
+import AdminRoute from "../route/AdminRoute";
+import AllRequest from "../pages/HrManagerPages/AllRequest/AllRequest";
+import EmployeeList from "../pages/HrManagerPages/EmployeeList/EmployeeList";
+import UpgradePackage from "../pages/HrManagerPages/UpgradePackage/UpgradePackage";
+import MyAssets from "../pages/EmployeePages/MyAssets/MyAssets";
+import RequestAsset from "../pages/EmployeePages/RequestAsset/RequestAsset";
+import MyTeam from "../pages/EmployeePages/MyTeam/MyTeam";
 
 const router = createBrowserRouter([
   {
@@ -29,7 +39,9 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        Component: Profile
+        element: <PrivateRoute>
+          <Profile></Profile>
+        </PrivateRoute>
       },
       {
         path: "*",
@@ -59,6 +71,60 @@ const router = createBrowserRouter([
         Component: ForgotPassword
       },
       
+      {
+        path: "*",
+        Component: PageNotFound,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <PrivateRoute>
+      <DashboardLayout></DashboardLayout>
+    </PrivateRoute>,
+    errorElement: <AppNotFound></AppNotFound>,
+    children: [
+      {
+        path: "dashboard",
+        Component: Dashboard
+      },
+      {
+        path: "add-asset",
+        element: <AdminRoute>
+          <AddAsset></AddAsset>
+        </AdminRoute>
+      },
+      {
+        path: "all-request",
+        element: <AdminRoute>
+          <AllRequest></AllRequest>
+        </AdminRoute>
+      },
+      
+      {
+        path: "employee-list",
+        element: <AdminRoute>
+          <EmployeeList></EmployeeList>
+        </AdminRoute>
+      },
+      {
+        path: "upgrade-package",
+        element: <AdminRoute>
+          <UpgradePackage></UpgradePackage>
+        </AdminRoute>
+      },
+      {
+        path: "request-asset",
+        element: <PrivateRoute>
+          <RequestAsset></RequestAsset>
+        </PrivateRoute>
+      },
+      {
+        path: "my-team",
+        element: <PrivateRoute>
+          <MyTeam></MyTeam>
+        </PrivateRoute>
+      },
       {
         path: "*",
         Component: PageNotFound,

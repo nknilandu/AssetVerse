@@ -2,7 +2,7 @@ import React from 'react';
 
 const Profile = () => {
     return (
-        <div>
+        <div className='my-16'>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos amet temporibus, optio quod at doloremque distinctio dolorem dolore tempore? Dolore impedit quia, repellendus dolor provident itaque illo eaque corporis ducimus.
         </div>
     );
