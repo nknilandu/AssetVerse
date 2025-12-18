@@ -21,7 +21,7 @@ const RequestAsset = () => {
 
   // Submit request
   const onSubmit = async (data) => {
-    console.log("data:", data, selectedAsset);
+    // console.log("data:", data, selectedAsset);
     if (!selectedAsset) return;
     setLoading(true);
 
@@ -34,6 +34,7 @@ const RequestAsset = () => {
       body: JSON.stringify({
         assetId: selectedAsset._id,
         assetName: selectedAsset.productName,
+        assetImage: selectedAsset.productImage,
         assetType: selectedAsset.productType,
         requesterName: user.displayName,
         requesterEmail: user.email,
@@ -66,7 +67,6 @@ const RequestAsset = () => {
           Swal.fire({ icon: "error", title: "Failed to submit request" });
         }
         document.getElementById("request_modal").close();
-
       })
       .catch((err) => {
         setLoading(false);
@@ -89,16 +89,12 @@ const RequestAsset = () => {
               />
             </figure>
             <p className="-mb-4 mt-4 mx-6 badge badge-primary badge-soft">
-                {asset.productType}
-              </p>
+              {asset.productType}
+            </p>
             <div className="card-body">
-              
-              
               <h2 className="card-title">{asset.productName}</h2>
 
-              <p className="text-md ">
-                Available: {asset.productQuantity}
-              </p>
+              <p className="text-md ">Available: {asset.productQuantity}</p>
               <div className="card-actions justify-end">
                 <button
                   className="btn btn-primary btn-sm"
