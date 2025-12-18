@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiBox, FiSearch } from "react-icons/fi";
 import { IoPlanetOutline } from "react-icons/io5";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
+import { AuthContext } from "../../../provider/AuthProvider";
 
 
 const AssetList = () => {
 
+    const { user } = useContext(AuthContext)
     const [ assetsData ,setAssetsData] = useState([])
     const [ stateLoading ,setStateLoading] = useState(true)
 
-    useEffect(()=>{
+    useEffect(()=>{       
 
-        fetch('http://localhost:2031/assets')
+        fetch(`http://localhost:2031/assets?email=${user.email}`)
             .then(res=>res.json())
             .then(data=> {
                 setAssetsData(data)
@@ -25,14 +27,23 @@ const AssetList = () => {
                 console.log(e)
             })
 
-    }, [])
+    }, [user.email])
+
+
+    const hanldeDelete = (id) => {
+        console.log(id)
+    }
+
+
+
+
 
   const handleSearch = (e) => {
     e.preventDefault();
     const searchText = e.target.search.value;
     // console.log(searchText)
 
-    fetch(`http://localhost:2031/assets?search=${searchText}`)
+    fetch(`http://localhost:2031/assets?email=${user.email}&search=${searchText}`)
             .then(res=>res.json())
             .then(data=> {
                 setAssetsData(data)
@@ -43,13 +54,13 @@ const AssetList = () => {
                 toast.error("Could not fatch data");
                 console.log(e)
             })
-
-
-
-
-
-
   };
+
+
+
+
+
+
   return (
     <div className="p-5">
       <div>
@@ -138,7 +149,7 @@ const AssetList = () => {
                     <button className="btn btn-sm  btn-outline btn-info">
                       Edit
                     </button>
-                    <button className="btn btn-sm btn-outline btn-error">
+                    <button onClick={()=>hanldeDelete(asset._id)} className="btn btn-sm btn-outline btn-error">
                       Delete
                     </button>
                   </div>
