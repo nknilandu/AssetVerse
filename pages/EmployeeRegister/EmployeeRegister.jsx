@@ -115,10 +115,10 @@ const EmployeeRegister = () => {
   return (
     <div className="min-h-screen w-full flex items-center px-4 py-20 bg-base-200">
       <title>Employee Registration | AssetVerse</title>
-      <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-fit mx-auto">
+      <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-full max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row gap-3">
           {/* form */}
-          <div className="flex-1 max-w-md">
+          <div className="flex-1">
             {/* Header */}
             <div className="flex flex-col justify-center text-center">
               <h1 className="text-2xl font-semibold mb-2">
@@ -304,7 +304,7 @@ const EmployeeRegister = () => {
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
           {/* ++++++++++++++++++++++++++++++++++++++++++ */}
-          <div className="flex-1 w-md">
+          <div className="flex-1">
             <div>
               <div className="flex items-center gap-3 mt-1">
                 <div className="w-8">

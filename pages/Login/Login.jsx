@@ -62,10 +62,10 @@ const Login = () => {
   return (
     <div className="min-h-screen w-full flex items-center px-4 py-20 bg-base-200">
       <title>Login | AssetVerse</title>
-      <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-fit mx-auto">
+      <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-full max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row gap-3">
           {/* form */}
-          <div className="flex-1 max-w-md">
+          <div className="flex-1 w-full">
             {/* Header */}
             <div className="flex flex-col justify-center text-center">
               <h1 className="text-3xl font-semibold mb-2">Welcome Back!</h1>
@@ -214,7 +214,7 @@ const Login = () => {
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
           {/* ++++++++++++++++++++++++++++++++++++++++++ */}
-          <div className="flex-1 w-md">
+          <div className="flex-1 w-full">
             <div>
               <div className="flex items-center gap-3 mt-1">
                 <div className="w-8">
@@ -229,7 +229,8 @@ const Login = () => {
 
             {/* =========== */}
             <p className="mt-5 mb-3">Trusted by Leading Organizations</p>
-            <div className="flex gap-2 justify-between text-center">
+            <div className="flex flex-row gap-2 justify-between text-center overflow-auto">
+              {/* ===== */}
               <div className="w-full flex flex-col justify-center items-center border border-base-content/20 rounded-md px-2 py-2">
                 <LuShieldPlus size={20} className="text-green-600" />
                 <p className="font-semibold">SSL Secured</p>
@@ -240,7 +241,6 @@ const Login = () => {
               {/* ====== */}
               <div className="w-full flex flex-col justify-center items-center border border-base-content/20 rounded-md px-2 py-2">
                 <FiLock size={20} className="text-green-600" />
-
                 <p className="font-semibold">GDPR Compliant</p>
                 <p className="text-sm text-base-content/50">Data protection</p>
               </div>
