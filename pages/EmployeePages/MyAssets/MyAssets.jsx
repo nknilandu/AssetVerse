@@ -5,70 +5,72 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
+import { useQuery } from "@tanstack/react-query";
 
 
 const MyAssets = () => {
   const { user } = useContext(AuthContext);
-  const [assets, setAssets] = useState([]);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // Fetch assigned assets
-  useEffect(() => {
-    if (!user?.email || !user?.accessToken) return;
 
-    fetch(
+  const { data: assets = [], isLoading, refetch } = useQuery({
+    queryKey: ['myAssets', user?.email, search, filterType],
+    queryFn: async ()=>{
+      const res = await fetch(
       `http://localhost:2031/requests?requesterEmail=${user.email}&search=${search}&assetType=${filterType}`,
       {
         headers: {
           authorization: `Bearer ${user.accessToken}`,
         },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setLoading(false);
-        setAssets(data);
-      })
-      .catch((e) => {
-        setLoading(false);
-        toast.error("Could not fetch data");
-        console.log(e);
       });
-  }, [user, search, filterType]);
+      const data = await res.json();
+      return data;
+    }
+  })
 
-  // Handle "Return" action
+  // handle return
   const handleReturn = async (requestId) => {
-    // try {
-    //   const res = await fetch(`http://localhost:2031/requests/${requestId}`, {
-    //     method: "PATCH",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${user.accessToken}`,
-    //     },
-    //     body: JSON.stringify({
-    //       requestStatus: "returned",
-    //       approvalDate: new Date(),
-    //     }),
-    //   });
-    //   const result = await res.json();
 
-    //   if (result.modifiedCount) {
-    //     Swal.fire({ icon: "success", title: "Asset marked as returned!" });
-    //     setAssets((prev) =>
-    //       prev.map((a) =>
-    //         a._id === requestId ? { ...a, requestStatus: "returned" } : a
-    //       )
-    //     );
-    //   } else {
-    //     Swal.fire({ icon: "error", title: "Failed to update status" });
-    //   }
-    // } catch (err) {
-    //   Swal.fire({ icon: "error", title: "Error", text: err.message });
-    // }
-  };
+
+   const dialog = await Swal.fire({
+  title: "Are you sure?",
+  text: "You want to return a asset!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, return it!"
+});
+
+  if (dialog.isConfirmed) {
+
+     const res = await fetch(`http://localhost:2031/requests/${requestId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({
+          requestStatus: "returned",
+        }),
+      });
+      const result = await res.json();
+
+      if (result.modifiedCount) {
+        refetch();
+        Swal.fire({ 
+          icon: "success", 
+          title: "Success!",
+          text: "Asset marked as returned!",
+        });
+      } else {
+        Swal.fire({ icon: "error", title: "Failed to update status" });
+      }
+  }
+};
+
+
 
   // Handle print
   const handlePrint = () => {
@@ -81,6 +83,7 @@ const MyAssets = () => {
 
   return (
     <div className="p-6">
+      <title>My Assets | AssetVerse</title>
       <div className="flex flex-col sm:flex-row gap-4 mb-4 items-center">
         <input
           type="text"
@@ -88,16 +91,16 @@ const MyAssets = () => {
           className="input input-bordered w-full sm:w-64"
           value={search}
           onChange={(e) => {
-            setLoading(true);
             setSearch(e.target.value);
+
           }}
         />
         <select
           className="input input-bordered w-full sm:w-52"
           value={filterType}
-          onChange={(e) => {
-            setLoading(true);
+          onChange={(e) => {  
             setFilterType(e.target.value);
+
           }}
         >
           <option value="">All Types</option>
@@ -113,7 +116,7 @@ const MyAssets = () => {
         
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <LoadingComponent></LoadingComponent>
       ) : assets.length === 0 ? (
         <NoDataFound></NoDataFound>
@@ -161,7 +164,7 @@ const MyAssets = () => {
                     asset.requestStatus === "approved" &&
                       asset.assetType === "returnable" && (
                         <button
-                          className="btn btn-sm btn-warning btn-outline"
+                          className="btn btn-sm btn-info btn-outline"
                           onClick={() => handleReturn(asset._id)}
                         >
                           Return

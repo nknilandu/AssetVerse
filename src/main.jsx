@@ -27,6 +27,11 @@ import MyAssets from "../pages/EmployeePages/MyAssets/MyAssets";
 import RequestAsset from "../pages/EmployeePages/RequestAsset/RequestAsset";
 import MyTeam from "../pages/EmployeePages/MyTeam/MyTeam";
 import UpdateAsset from "../pages/HrManagerPages/UpdateAsset/UpdateAsset";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
 
 const router = createBrowserRouter([
   {
@@ -140,10 +145,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+// Create a client
+const queryClient = new QueryClient()
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
