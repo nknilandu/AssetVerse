@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import { useQuery } from "@tanstack/react-query";
+import { TiFlashOutline } from "react-icons/ti";
+import { NavLink } from "react-router";
 
 const EmployeeList = () => {
   const { user } = useContext(AuthContext);
@@ -47,51 +49,72 @@ const EmployeeList = () => {
   console.log(employees);
 
   const handleRemove = (employeeEmail) => {
-
     Swal.fire({
-        title: "Are you sure?",
-        text: "Do you want to remove this employee from the team?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, remove",
-      }).then(async (confirm)=> {
-
-         if (confirm.isConfirmed) {
-            const res = await fetch(
-            `http://localhost:2031/employeeAffiliations/${employeeEmail}`,
-            {
-              method: "DELETE",
-              headers: { authorization: `Bearer ${user.accessToken}` },
-            }
-          );
-          const result = await res.json();
-          console.log(result)
-
-          if (result.deletedCount) {
-            Swal.fire("Removed!", "Employee has been removed.", "success");
-            refetchEmployees()
-            refetchPackage()
-          } else {
-            Swal.fire("Error", "Failed to remove employee", "error");
+      title: "Are you sure?",
+      text: "Do you want to remove this employee from the team?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, remove",
+    }).then(async (confirm) => {
+      if (confirm.isConfirmed) {
+        const res = await fetch(
+          `http://localhost:2031/employeeAffiliations/${employeeEmail}`,
+          {
+            method: "DELETE",
+            headers: { authorization: `Bearer ${user.accessToken}` },
           }
+        );
+        const result = await res.json();
+        console.log(result);
 
-         }
-      })
+        if (result.deletedCount) {
+          Swal.fire("Removed!", "Employee has been removed.", "success");
+          refetchEmployees();
+          refetchPackage();
+        } else {
+          Swal.fire("Error", "Failed to remove employee", "error");
+        }
+      }
+    });
   };
 
   return (
     <div className="p-5">
-        <title>Employee List | AssetVerse</title>
-        <div className="w-full mb-10">
-          <h2 className="text-3xl font-bold text-foreground mb-2">
-            All Request Asset
-          </h2>
-          <p className="text-muted-foreground">
-            Discover quality products from trusted suppliers worldwide
-          </p>
+      <title>Employee List | AssetVerse</title>
+      <div className="w-full mb-10">
+        <h2 className="text-3xl font-bold text-foreground mb-2">
+          All Request Asset
+        </h2>
+        <p className="text-muted-foreground">
+          Discover quality products from trusted suppliers worldwide
+        </p>
+      </div>
+
+     {/* alert bar */}
+     {
+        employeeLimit<20 && (<div className="flex flex-col items-start mb-8 space-y-4 bg-warning/10 rounded-xl p-5">
+        <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center">
+          <div className="mb-2">
+            <p className="text-lg font-semibold text-warning">
+              Approaching Package Limit ({employees.length}/{employeeLimit})
+            </p>
+            <p className="text-sm text-warning/80">
+              You are currently using our basic plan or standard plan. You can upgrade your plan by purchasing a package.
+            </p>
+          </div>
+          <NavLink to='/upgrade-package'>
+            <button className="btn btn-sm btn-warning">
+            <TiFlashOutline /> Upgrade Now
+          </button>
+          </NavLink>
         </div>
-
-
+        <progress
+          className="progress progress-warning w-full"
+          value={employees.length}
+          max={employeeLimit}
+        ></progress>
+      </div>)
+     }
 
 
       <div className="mb-4 flex justify-between items-center">

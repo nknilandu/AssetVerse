@@ -168,7 +168,7 @@ const UpdateAsset = () => {
             <input
               {...register("avlQty", {
                 required: "Quantity is required",
-                min: { value: 1, message: "Minimum quantity is 1" },
+                min: { value: 0, message: "Minimum quantity is 0" },
               })}
               type="number"
               min="0"

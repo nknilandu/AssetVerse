@@ -95,7 +95,7 @@ const RequestAsset = () => {
             <div className="card-body">
               <h2 className="card-title">{asset.productName}</h2>
 
-              <p className="text-md ">Available: {asset.productQuantity}</p>
+              <p className="text-md ">Available Quantity: {asset.availableQuantity}</p>
               <div className="card-actions justify-end">
                 <button
                   className="btn btn-primary btn-sm"

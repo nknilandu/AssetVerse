@@ -73,7 +73,7 @@ const EmployeeRegister = () => {
             photoURL: photoLink,
           })
             .then(() => {
-              toast.success("profile update");
+              toast.success("profile updated");
 
               // add data at database
               fetch("http://localhost:2031/users", {
