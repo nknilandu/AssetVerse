@@ -79,29 +79,49 @@ const NavDropDown = () => {
         {
             userRole ? userRole==="hr" ? (
                 <>
-                    <li className="hover:text-secondary">
-                     <p>Asset List</p>
+                <li className="hover:text-secondary">
+                     <NavLink to='/dashboard'>
+                      <p>Asset List</p>
+                     </NavLink>
                 </li>
                 <li className="hover:text-secondary">
-                     <p>Add Asset</p>
+                  <NavLink to='/all-request'>
+                    <p>All Requests</p>
+                  </NavLink>
+                     
                 </li>
                 <li className="hover:text-secondary">
-                     <p>All Requests</p>
+                  <NavLink to='/add-asset'>
+                    <p>Add Asset</p>
+                  </NavLink>
+                     
                 </li>
+                
                 <li className="hover:text-secondary">
-                     <p>Employee List</p>
+                  <NavLink to='/employee-list'>
+                    <p>Employee List</p>
+                  </NavLink>
+                     
                 </li>
                 </>
             ) : (
                 <>
                 <li className="hover:text-secondary">
-                     <p>My Assets</p>
+                  <NavLink to='/dashboard'>
+                  <p>My Assets</p>
+                  </NavLink>
+                     
                 </li>
                 <li className="hover:text-secondary">
-                     <p>My Team</p>
+                  <NavLink to='/request-asset'>
+                    <p>Request Asset</p>
+                  </NavLink>
+                     
                 </li>
                 <li className="hover:text-secondary">
-                     <p>Request Asset</p>
+                     <NavLink to='/my-team'>
+                    <p>My Team</p>
+                  </NavLink>
                 </li>
                 </>
             ) : (

@@ -1,76 +1,78 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../../../provider/AuthProvider";
 import { FiPrinter } from "react-icons/fi";
 import Swal from "sweetalert2";
-import toast from "react-hot-toast";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import { useQuery } from "@tanstack/react-query";
-
 
 const MyAssets = () => {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
 
-
-  const { data: assets = [], isLoading, refetch } = useQuery({
-    queryKey: ['myAssets', user?.email, search, filterType],
-    queryFn: async ()=>{
+  const {
+    data: assets = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["myAssets", user?.email, search, filterType],
+    queryFn: async () => {
       const res = await fetch(
-      `http://localhost:2031/requests?requesterEmail=${user.email}&search=${search}&assetType=${filterType}`,
-      {
-        headers: {
-          authorization: `Bearer ${user.accessToken}`,
-        },
-      });
+        `http://localhost:2031/requests/?requesterEmail=${user.email}&search=${search}&assetType=${filterType}`,
+        {
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
       const data = await res.json();
       return data;
-    }
-  })
+    },
+  });
 
   // handle return
   const handleReturn = async (requestId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to return a asset!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, return it!",
+    }).then(async (result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
 
+      const res = await fetch(
+        `http://localhost:2031/requests/return/${requestId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+          body: JSON.stringify({
+            requestStatus: "returned",
+          }),
+        }
+      );
+      const resultData = await res.json();
 
-   const dialog = await Swal.fire({
-  title: "Are you sure?",
-  text: "You want to return a asset!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, return it!"
-});
-
-  if (dialog.isConfirmed) {
-
-     const res = await fetch(`http://localhost:2031/requests/${requestId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
-        },
-        body: JSON.stringify({
-          requestStatus: "returned",
-        }),
-      });
-      const result = await res.json();
-
-      if (result.modifiedCount) {
+      if (resultData.modifiedCount) {
         refetch();
-        Swal.fire({ 
-          icon: "success", 
+        Swal.fire({
+          icon: "success",
           title: "Success!",
           text: "Asset marked as returned!",
         });
       } else {
         Swal.fire({ icon: "error", title: "Failed to update status" });
       }
-  }
-};
-
-
+    });
+  };
 
   // Handle print
   const handlePrint = () => {
@@ -92,15 +94,13 @@ const MyAssets = () => {
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
-
           }}
         />
         <select
           className="input input-bordered w-full sm:w-52"
           value={filterType}
-          onChange={(e) => {  
+          onChange={(e) => {
             setFilterType(e.target.value);
-
           }}
         >
           <option value="">All Types</option>
@@ -108,12 +108,12 @@ const MyAssets = () => {
           <option value="non-returnable">Non-returnable</option>
         </select>
 
-      
-            <button onClick={handlePrint} className="btn btn-primary ml-auto flex items-center gap-2">
-              <FiPrinter /> Print
-            </button>
-
-        
+        <button
+          onClick={handlePrint}
+          className="btn btn-primary ml-auto flex items-center gap-2"
+        >
+          <FiPrinter /> Print
+        </button>
       </div>
 
       {isLoading ? (
@@ -155,13 +155,20 @@ const MyAssets = () => {
                       : "-"}
                   </td>
                   <td>
-                    <p className={`badge badge-xs badge-soft rounded-full ${asset.requestStatus==="approved"?"badge-success":asset.requestStatus==="pending"?"badge-warning":"badge-error"}`}>
-                        {asset.requestStatus}
+                    <p
+                      className={`badge badge-xs badge-soft rounded-full ${
+                        asset.requestStatus === "approved"
+                          ? "badge-success"
+                          : asset.requestStatus === "pending"
+                          ? "badge-warning"
+                          : "badge-error"
+                      }`}
+                    >
+                      {asset.requestStatus}
                     </p>
-                    </td>
+                  </td>
                   <td>
-                    {
-                    asset.requestStatus === "approved" &&
+                    {asset.requestStatus === "approved" &&
                       asset.assetType === "returnable" && (
                         <button
                           className="btn btn-sm btn-info btn-outline"

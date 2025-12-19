@@ -131,6 +131,7 @@ const AssetList = () => {
 
   return (
     <div className="p-5">
+      <title>Assets List | AssetVerse</title>
       <div>
         <h2 className="text-3xl font-bold text-foreground mb-2">
           All Asset List
@@ -215,7 +216,7 @@ const AssetList = () => {
                 <td>
                   <div className="space-x-2 flex">
                     <NavLink to={`/update-asset/${asset._id}`}>
-                        <button className="btn btn-sm  btn-outline btn-info">
+                        <button className="btn btn-sm btn-outline btn-info">
                       Edit
                     </button>
                     </NavLink>

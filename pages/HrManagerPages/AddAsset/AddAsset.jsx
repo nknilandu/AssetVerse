@@ -103,6 +103,7 @@ const AddAsset = () => {
 
   return (
     <div className="min-h-[93svh] flex items-center px-4 py-20 bg-base-200">
+      <title>Add Asset | AssetVerse</title>
       <div className="bg-base-100 rounded-2xl shadow-lg p-6 w-full max-w-md mx-auto">
         {/* Header */}
         <div className="text-center mb-6">

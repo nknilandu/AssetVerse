@@ -31,7 +31,8 @@ const UpdateAsset = () => {
     if (assetData) {
       setValue("name", assetData.productName);
       setValue("type", assetData.productType);
-      setValue("quantity", assetData.productQuantity);
+      setValue("totalQty", assetData.productQuantity);
+      setValue("avlQty", assetData.availableQuantity);
       setValue("imgLink", assetData.productImage);
     }
   }, [assetData, setValue]);
@@ -45,7 +46,8 @@ const UpdateAsset = () => {
     const updateData = {
       productImage: data.imgLink,
       productName: data.name,
-      productQuantity: data.quantity,
+      productQuantity: data.totalQty,
+      availableQuantity: data.avlQty,
       productType: data.type,
     };
 
@@ -143,11 +145,12 @@ const UpdateAsset = () => {
             </select>
           </div>
 
-          {/* Quantity */}
+            <div className="flex gap-2">
+                        {/* total Quantity */}
           <div>
-            <label className="block label mb-1">Quantity</label>
+            <label className="block label mb-1">Total Quantity</label>
             <input
-              {...register("quantity", {
+              {...register("totalQty", {
                 required: "Quantity is required",
                 min: { value: 1, message: "Minimum quantity is 1" },
               })}
@@ -158,6 +161,24 @@ const UpdateAsset = () => {
               className="input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
             />
           </div>
+
+          {/*available Quantity */}
+          <div>
+            <label className="block label mb-1">Available Quantity</label>
+            <input
+              {...register("avlQty", {
+                required: "Quantity is required",
+                min: { value: 1, message: "Minimum quantity is 1" },
+              })}
+              type="number"
+              min="0"
+              step="1"
+              placeholder="e.g. 10"
+              className="input text-sm w-full py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+            />
+          </div>
+            </div>
+
 
           {/* Error */}
           <div>
