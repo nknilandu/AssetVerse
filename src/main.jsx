@@ -44,12 +44,6 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "profile",
-        element: <PrivateRoute>
-          <Profile></Profile>
-        </PrivateRoute>
-      },
-      {
         path: "*",
         Component: PageNotFound,
       }
@@ -135,6 +129,12 @@ const router = createBrowserRouter([
         path: "my-team",
         element: <PrivateRoute>
           <MyTeam></MyTeam>
+        </PrivateRoute>
+      },
+      {
+        path: "profile",
+        element: <PrivateRoute>
+          <Profile></Profile>
         </PrivateRoute>
       },
       {

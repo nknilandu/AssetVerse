@@ -3,7 +3,7 @@ import { AiOutlineAim } from "react-icons/ai";
 import { FiBox } from "react-icons/fi";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 import { LuLightbulb, LuShieldCheck, LuUsers } from "react-icons/lu";
-import { Link, Navigate, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import Logo from "../../components/Logo/Logo";
 import { MdInfoOutline, MdOutlineLock } from "react-icons/md";
 import { RiBuilding2Line } from "react-icons/ri";
