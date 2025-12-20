@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import Swal from "sweetalert2";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { useQuery } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 
 const Profile = () => {
   const { user, updateUserProfile, userRole } = useContext(AuthContext);
@@ -13,7 +12,7 @@ const Profile = () => {
   const [photo, setPhoto] = useState(null);
 
   const { data: affiliations = [] } = useQuery({
-    queryKey: ["userAffiliations", user],
+    queryKey: ["userAffiliations", user.email],
     queryFn: async () => {
       const res = await fetch(
         `http://localhost:2031/employeeAffiliations?employeeEmail=${user.email}`,
@@ -23,10 +22,12 @@ const Profile = () => {
           },
         }
       );
-      const result = await res.json();
-      return result;
+      const affiliationsResult = await res.json();
+      return affiliationsResult;
     },
   });
+
+  //   console.log(affiliations)
 
   // Update profile
   const handleUpdate = async (e) => {
@@ -106,6 +107,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
+        <title>Profile | AssetVerse</title>
       {/* Profile Card */}
       <div className="card bg-base-200 shadow-md">
         <div className="card-body">

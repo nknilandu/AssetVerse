@@ -45,8 +45,8 @@ const EmployeeList = () => {
     },
   });
 
-  console.log(employeeLimit);
-  console.log(employees);
+//   console.log(employeeLimit);
+//   console.log(employees);
 
   const handleRemove = (employeeEmail) => {
     Swal.fire({
