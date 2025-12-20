@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import Swal from "sweetalert2";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
@@ -71,21 +71,24 @@ const Profile = () => {
       ...(photoURL && { photoURL }),
     });
 
-    const updateUsers = await fetch("http://localhost:2031/users", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${user.accessToken}`,
-      },
-      body: JSON.stringify({
-        name,
-        ...(photoURL && { photoURL }),
-      }),
-    });
+    const updateUsers = await fetch(
+      `http://localhost:2031/users?email=${user.email}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${user.accessToken}`,
+        },
+        body: JSON.stringify({
+          name,
+          ...(photoURL && { photoURL }),
+        }),
+      }
+    );
 
     const resultData = await updateUsers.json();
 
-    if (!resultData.insertedId) {
+    if (!resultData.modifiedCount) {
       Swal.fire({
         title: "Oops!",
         text: "Something went wrong.",
@@ -107,7 +110,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
-        <title>Profile | AssetVerse</title>
+      <title>Profile | AssetVerse</title>
       {/* Profile Card */}
       <div className="card bg-base-200 shadow-md">
         <div className="card-body">
