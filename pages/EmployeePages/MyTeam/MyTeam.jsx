@@ -1,117 +1,127 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../../../provider/AuthProvider";
-import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
-import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 
-const MyTeam = () => {
-  const { user } = useContext(AuthContext);
-  const [companies, setCompanies] = useState([]);
+export default function MyTeam() {
   const [selectedCompany, setSelectedCompany] = useState("");
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // Fetch companies HR manages
-  useEffect(() => {
-    if (!user?.email) return;
-
-    fetch(`http://localhost:2031/companies?hrEmail=${user.email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCompanies(data);
-        if (data.length) setSelectedCompany(data[0].companyName);
-      })
-      .catch(console.error);
-  }, [user]);
-
-  // Fetch employees for selected company
-  useEffect(() => {
-    if (!user?.email || !selectedCompany) return;
-    setLoading(true);
-
-    fetch(
-      `http://localhost:2031/employees?hrEmail=${user.email}&companyName=${selectedCompany}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setEmployees(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [user, selectedCompany]);
-
-  // Filter upcoming birthdays in current month
-  const upcomingBirthdays = employees.filter((emp) => {
-    const birthDate = new Date(emp.affiliationDate); // replace with birthday field if exists
-    return birthDate.getMonth() === new Date().getMonth();
+  const { user } =  useContext(AuthContext)
+  
+  // 1️⃣ Get all affiliations for this employee
+  const { data: affiliations = [], isLoading } = useQuery({
+    queryKey: ["myAffiliations", user.email],
+    queryFn: async () => {
+      const res = await fetch(
+        `http://localhost:2031/employeeAffiliations?employeeEmail=${user.email}`,
+        {
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+      return res.json();
+    },
   });
 
+  console.log(affiliations)
+
+  // 2️⃣ Unique companies for dropdown
+  const companies = useMemo(() => {
+    return [...new Set(affiliations.map((a) => a.companyName))];
+  }, [affiliations]);
+
+  useEffect(() => {
+    if (companies.length && !selectedCompany) {
+      setSelectedCompany(companies[0]);
+    }
+  }, [companies, selectedCompany]);
+
+  // 3️⃣ Team members in selected company
+  const { data: team = [] } = useQuery({
+    enabled: !!selectedCompany,
+    queryKey: ["team", selectedCompany],
+    queryFn: async () => {
+      const res = await fetch(
+        `http://localhost:2031/employeeAffiliations/companyName?companyName=${selectedCompany}`,
+        {
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+      return res.json();
+    },
+  });
+
+  console.log(team)
+
+  // 4️⃣ Upcoming birthdays (current month)
+  const upcomingBirthdays = team.filter((member) => {
+    if (!member.dateOfBirth) return false;
+    return (
+      new Date(member.dateOfBirth).getMonth() ===
+      new Date().getMonth()
+    );
+  });
+
+  if (isLoading) return <p>Loading team...</p>;
+
   return (
-    <div className="p-6">
-      {/* Company Selection */}
-      <div className="mb-4 flex gap-4">
-        {companies.map((c) => (
-          <button
-            key={c.companyName}
-            onClick={() => setSelectedCompany(c.companyName)}
-            className={`btn btn-sm ${
-              selectedCompany === c.companyName ? "btn-primary" : "btn-outline"
-            }`}
+    <div className="space-y-6">
+      {/* Company Selector */}
+      <div>
+        <label className="font-medium">Select Company</label>
+        <select
+          className="select select-bordered w-full max-w-sm mt-2"
+          value={selectedCompany}
+          onChange={(e) => setSelectedCompany(e.target.value)}
+        >
+          {companies.map((company) => (
+            <option key={company}>{company}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Team Members */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {team.map((member) => (
+          <div
+            key={member.employeeEmail}
+            className="card bg-base-100 shadow-md"
           >
-            {c.companyName}
-          </button>
+            <div className="card-body items-center text-center">
+              <img
+                src={member.employeeLogo}
+                alt={member.employeeName}
+                className="w-16 h-16 rounded-full"
+              />
+              <h3 className="font-semibold mt-2">
+                {member.employeeName}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {member.employeeEmail}
+              </p>
+              <p className="text-sm">{member.position || "Employee"}</p>
+            </div>
+          </div>
         ))}
       </div>
 
-      {loading ? (
-        <LoadingComponent />
-      ) : employees.length === 0 ? (
-        <NoDataFound />
-      ) : (
-        <>
-          <h2 className="text-lg font-semibold mb-2">Employees</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {employees.map((emp) => (
-              <div key={emp.employeeEmail} className="card shadow p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-xl">
-                    {emp.employeeName[0]}
-                  </div>
-                  <div>
-                    <h3 className="font-medium">{emp.employeeName}</h3>
-                    <p className="text-sm text-gray-500">{emp.employeeEmail}</p>
-                    <p className="text-sm text-gray-500">{emp.position || "-"}</p>
-                  </div>
-                </div>
-              </div>
+      {/* Upcoming Birthdays */}
+      {upcomingBirthdays.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold mb-2">
+            🎂 Upcoming Birthdays (This Month)
+          </h2>
+          <ul className="space-y-1">
+            {upcomingBirthdays.map((member) => (
+              <li key={member.employeeEmail}>
+                {member.employeeName} —{" "}
+                {new Date(member.dateOfBirth).toLocaleDateString()}
+              </li>
             ))}
-          </div>
-
-          {/* Upcoming Birthdays */}
-          {upcomingBirthdays.length > 0 && (
-            <div className="mt-6">
-              <h2 className="text-lg font-semibold mb-2">
-                Upcoming Birthdays
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {upcomingBirthdays.map((emp) => (
-                  <div
-                    key={emp.employeeEmail}
-                    className="card shadow p-4 border border-yellow-300"
-                  >
-                    <h3 className="font-medium">{emp.employeeName}</h3>
-                    <p className="text-sm text-gray-500">{emp.employeeEmail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
+          </ul>
+        </div>
       )}
     </div>
   );
-};
-
-export default MyTeam;
+}

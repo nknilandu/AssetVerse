@@ -15,7 +15,7 @@ const EmployeeRegister = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, setUser, updateUserProfile, setUserRole } = useContext(AuthContext);
   const [stateLoading, setStateLoading] = useState(false);
 
   const {
@@ -91,6 +91,7 @@ const EmployeeRegister = () => {
 
                     toast.success("Successfully Account Created");
                     navigate(`${location.state ? location.state : "/"}`);
+                    setUserRole("employee")
                   } else {
                     // failed
                     toast.error("Failed to save user");

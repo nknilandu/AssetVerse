@@ -23,7 +23,6 @@ import AdminRoute from "../route/AdminRoute";
 import AllRequest from "../pages/HrManagerPages/AllRequest/AllRequest";
 import EmployeeList from "../pages/HrManagerPages/EmployeeList/EmployeeList";
 import UpgradePackage from "../pages/HrManagerPages/UpgradePackage/UpgradePackage";
-import MyAssets from "../pages/EmployeePages/MyAssets/MyAssets";
 import RequestAsset from "../pages/EmployeePages/RequestAsset/RequestAsset";
 import MyTeam from "../pages/EmployeePages/MyTeam/MyTeam";
 import UpdateAsset from "../pages/HrManagerPages/UpdateAsset/UpdateAsset";
@@ -31,6 +30,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import PaymentSuccess from "../pages/HrManagerPages/UpgradePackage/PaymentSuccess/PaymentSuccess";
+import PaymentCancelled from "../pages/HrManagerPages/UpgradePackage/PaymentCancelled/PaymentCancelled";
 
 
 const router = createBrowserRouter([
@@ -117,6 +118,18 @@ const router = createBrowserRouter([
         path: "upgrade-package",
         element: <AdminRoute>
           <UpgradePackage></UpgradePackage>
+        </AdminRoute>
+      },
+      {
+        path: "dashboard/payment-success",
+        element: <AdminRoute>
+          <PaymentSuccess></PaymentSuccess>
+        </AdminRoute>
+      },
+      {
+        path: "dashboard/payment-cancelled",
+        element: <AdminRoute>
+          <PaymentCancelled></PaymentCancelled>
         </AdminRoute>
       },
       {

@@ -40,6 +40,40 @@ export default function UpgradePackage() {
     },
   });
 
+  //   ============ handle payment ===============
+
+  const handlePayment = (plan) => {
+    const paymentInfo = {
+      price: plan.price,
+      subscription: plan.name,
+      senderEmail: user.email,
+      packageId: plan._id,
+    };
+
+    // console.log(paymentInfo)
+
+    fetch("http://localhost:2031/checkout-session", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${user.accessToken}`,
+      },
+      body: JSON.stringify(paymentInfo),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data)
+        window.location.href = data.url;
+      });
+  };
+
+
+
+
+
+
+
+  
   return (
     <div className="py-14">
       {/* Header */}
@@ -92,9 +126,13 @@ export default function UpgradePackage() {
                 </p>
 
                 <button
+                  onClick={() => {
+                    handlePayment(plan);
+                  }}
                   disabled={
                     plan.name.toLowerCase() === "basic" ||
-                    plan.name.toLowerCase() === subscription
+                    subscription.toLowerCase() === "advanced" ||
+                    plan.name.toLowerCase() === subscription.toLowerCase() 
                   }
                   className={`btn btn-primary rounded-lg my-6 ${
                     plan.name === "Standard" || "btn-soft"

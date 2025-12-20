@@ -27,7 +27,7 @@ const HrRegister = () => {
   const [stateLoading, setStateLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { createUser, setUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, setUser, updateUserProfile, setUserRole } = useContext(AuthContext);
 
   const togglePassword = () => {
     setShowPass(!showPass);
@@ -103,6 +103,7 @@ const HrRegister = () => {
                       // success
                       toast.success("Successfully Account Created");
                       navigate(`${location.state ? location.state : "/"}`);
+                      setUserRole("hr")
                     } else {
                       // failed to add data at database
                       toast.error("Failed to save user");
