@@ -26,7 +26,6 @@ export default function UpgradePackage() {
   const {
     data: plans = [],
     isLoading,
-    refetch,
   } = useQuery({
     queryKey: ["upgradePlan", user, subscription],
     queryFn: async () => {

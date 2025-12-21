@@ -23,7 +23,7 @@ const AssetList = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setAssetsData(data);
+        setAssetsData(data.assetData);
         setStateLoading(false);
       })
       .catch((e) => {

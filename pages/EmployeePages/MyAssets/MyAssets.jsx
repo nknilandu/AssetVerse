@@ -84,36 +84,48 @@ const MyAssets = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-5">
       <title>My Assets | AssetVerse</title>
-      <div className="flex flex-col sm:flex-row gap-4 mb-4 items-center">
-        <input
-          type="text"
-          placeholder="Search by Asset Name"
-          className="input input-bordered w-full sm:w-64"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
-        />
-        <select
-          className="input input-bordered w-full sm:w-52"
-          value={filterType}
-          onChange={(e) => {
-            setFilterType(e.target.value);
-          }}
-        >
-          <option value="">All Types</option>
-          <option value="returnable">Returnable</option>
-          <option value="non-returnable">Non-returnable</option>
-        </select>
+      <div>
+        <h2 className="text-3xl font-bold text-foreground mb-2">
+          My Asset List
+        </h2>
+        <p className="text-muted-foreground">
+          Discover quality products from trusted suppliers worldwide
+        </p>
+      </div>
+      {/* ============== */}
 
-        <button
-          onClick={handlePrint}
-          className="btn btn-primary ml-auto flex items-center gap-2"
-        >
-          <FiPrinter /> Print
-        </button>
+      <div className="w-full bg-base-100 border border-base-content/10 p-5 rounded-xl  my-5">
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Search by Asset Name"
+            className="input input-bordered w-full sm:w-64"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
+          <select
+            className="input input-bordered w-full sm:w-52"
+            value={filterType}
+            onChange={(e) => {
+              setFilterType(e.target.value);
+            }}
+          >
+            <option value="">All Types</option>
+            <option value="returnable">Returnable</option>
+            <option value="non-returnable">Non-returnable</option>
+          </select>
+
+          <button
+            onClick={handlePrint}
+            className="btn btn-primary ml-auto flex items-center gap-2"
+          >
+            <FiPrinter /> Print
+          </button>
+        </div>
       </div>
 
       {isLoading ? (
