@@ -7,42 +7,36 @@ import LoadingComponent from "../../../components/LoadingComponent/LoadingCompon
 import { AuthContext } from "../../../provider/AuthProvider";
 import Swal from "sweetalert2";
 import { NavLink } from "react-router";
+import PieChartAsset from "./components/PieChartAsset/PieChartAsset";
+import BarChartAsset from "./components/BarChartAsset/BarChartAsset";
 
 const AssetList = () => {
+  const { user } = useContext(AuthContext);
+  const [assetsData, setAssetsData] = useState([]);
+  const [stateLoading, setStateLoading] = useState(true);
 
+  useEffect(() => {
+    fetch(`http://localhost:2031/assets?email=${user.email}`, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAssetsData(data);
+        setStateLoading(false);
+      })
+      .catch((e) => {
+        setStateLoading(false);
+        toast.error("Could not fatch data");
+        console.log(e);
+      });
+  }, [user]);
 
-    const { user } = useContext(AuthContext)
-    const [ assetsData ,setAssetsData] = useState([])
-    const [ stateLoading ,setStateLoading] = useState(true)
-     
+  const hanldeDelete = (id) => {
+    // console.log(id)
 
-
-
-    useEffect(()=>{       
-
-        fetch(`http://localhost:2031/assets?email=${user.email}`, {
-            headers: {
-        authorization: `Bearer ${user.accessToken}`
-      }
-        })
-            .then(res=>res.json())
-            .then(data=> {
-                setAssetsData(data)
-                setStateLoading(false)
-            })
-            .catch(e=>{
-                setStateLoading(false)
-                toast.error("Could not fatch data");
-                console.log(e)
-            })
-
-    }, [user])
-
-
-    const hanldeDelete = (id) => {
-        // console.log(id)
-
-            Swal.fire({
+    Swal.fire({
       title: "Are you sure want to delete?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -63,7 +57,6 @@ const AssetList = () => {
             email: user.email,
           },
         })
-        
           .then((res) => res.json())
           .then((data) => {
             // console.log(data)
@@ -91,43 +84,32 @@ const AssetList = () => {
         // ===========
       }
     });
-
-
-
-
-
-    }
-
-
-
-
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     const searchText = e.target.search.value;
     // console.log(searchText)
 
-    fetch(`http://localhost:2031/assets?email=${user.email}&search=${searchText}`, {
-            headers: {
-        authorization: `Bearer ${user.accessToken}`
-      
-    }})
-            .then(res=>res.json())
-            .then(data=> {
-                setAssetsData(data)
-                setStateLoading(false)
-            })
-            .catch(e=>{
-                setStateLoading(false)
-                toast.error("Could not fatch data");
-                console.log(e)
-            })
+    fetch(
+      `http://localhost:2031/assets?email=${user.email}&search=${searchText}`,
+      {
+        headers: {
+          authorization: `Bearer ${user.accessToken}`,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setAssetsData(data);
+        setStateLoading(false);
+      })
+      .catch((e) => {
+        setStateLoading(false);
+        toast.error("Could not fatch data");
+        console.log(e);
+      });
   };
-
-
-
-
-
 
   return (
     <div className="p-5">
@@ -140,6 +122,17 @@ const AssetList = () => {
           Discover quality products from trusted suppliers worldwide
         </p>
       </div>
+      {/* ============== */}
+
+      <div className="flex flex-col md:flex-row gap-4 w-full mt-5">
+        <div className="flex-1">
+          <PieChartAsset></PieChartAsset>
+        </div>
+        <div className="flex-1">
+          <BarChartAsset></BarChartAsset>
+        </div>
+      </div>
+
       {/* searchbar */}
       <div className="w-full bg-base-100 border border-base-content/10 p-5 rounded-xl  my-5">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
@@ -153,12 +146,16 @@ const AssetList = () => {
               <input
                 type="text"
                 name="search"
-                
                 placeholder="Search anything"
                 className="input text-sm py-2 pl-12 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
               />
             </div>
-            <button disabled={stateLoading} className="btn btn-primary rounded-md">Search</button>
+            <button
+              disabled={stateLoading}
+              className="btn btn-primary rounded-md"
+            >
+              Search
+            </button>
           </form>
           <div className="flex justify-center items-center gap-2">
             <IoPlanetOutline size={20} />
@@ -169,69 +166,70 @@ const AssetList = () => {
       </div>
       {/* ================ table =================== */}
 
-      {
-        stateLoading ? (
-            <LoadingComponent></LoadingComponent>
-        ) : assetsData.length===0 ? (
-            <NoDataFound></NoDataFound>
-        ) : (
-            <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          {/* Table head */}
-          <thead>
-            <tr>
-              <th>no.</th>
-              <th>Asset</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Total Qty</th>
-              <th>Available</th>
-              <th>Date Added</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          {/* Table body */}
-          <tbody>
-            {assetsData.map((asset, index) => (
-              <tr key={asset._id}>
-                <th>{index + 1}</th>
-
-                {/* Asset image + name */}
-                <td>
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-10">
-                      <img src={asset.productImage} />
-                    </div>
-                  </div>
-                </td>
-
-                <td className="">{asset.productName}</td>
-                <td className="capitalize">{asset.productType}</td>
-                <td>{asset.productQuantity}</td>
-                <td>{asset.availableQuantity}</td>
-                <td>{new Date(asset.dateAdded).toLocaleDateString()}</td>
-
-                {/* Actions */}
-                <td>
-                  <div className="space-x-2 flex">
-                    <NavLink to={`/update-asset/${asset._id}`}>
-                        <button className="btn btn-sm btn-outline btn-info">
-                      Edit
-                    </button>
-                    </NavLink>
-                    <button onClick={()=>hanldeDelete(asset._id)} className="btn btn-sm btn-outline btn-error">
-                      Delete
-                    </button>
-                  </div>
-                </td>
+      {stateLoading ? (
+        <LoadingComponent></LoadingComponent>
+      ) : assetsData.length === 0 ? (
+        <NoDataFound></NoDataFound>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            {/* Table head */}
+            <thead>
+              <tr>
+                <th>no.</th>
+                <th>Asset</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Total Qty</th>
+                <th>Available</th>
+                <th>Date Added</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-        )
-      }
+            </thead>
+
+            {/* Table body */}
+            <tbody>
+              {assetsData.map((asset, index) => (
+                <tr key={asset._id}>
+                  <th>{index + 1}</th>
+
+                  {/* Asset image + name */}
+                  <td>
+                    <div className="avatar">
+                      <div className="mask mask-squircle w-10">
+                        <img src={asset.productImage} />
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="">{asset.productName}</td>
+                  <td className="capitalize">{asset.productType}</td>
+                  <td>{asset.productQuantity}</td>
+                  <td>{asset.availableQuantity}</td>
+                  <td>{new Date(asset.dateAdded).toLocaleDateString()}</td>
+
+                  {/* Actions */}
+                  <td>
+                    <div className="space-x-2 flex">
+                      <NavLink to={`/update-asset/${asset._id}`}>
+                        <button className="btn btn-sm btn-outline btn-info">
+                          Edit
+                        </button>
+                      </NavLink>
+                      <button
+                        onClick={() => hanldeDelete(asset._id)}
+                        className="btn btn-sm btn-outline btn-error"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* =============================== */}
     </div>

@@ -46,8 +46,8 @@ const UpdateAsset = () => {
     const updateData = {
       productImage: data.imgLink,
       productName: data.name,
-      productQuantity: data.totalQty,
-      availableQuantity: data.avlQty,
+      productQuantity: Number(data.totalQty),
+      availableQuantity: Number(data.avlQty),
       productType: data.type,
     };
 

@@ -134,18 +134,26 @@ export default function TestimonialsSection() {
       <Swiper
         className="mySwiper"
         spaceBetween={16}
-        slidesPerView={3}
+        slidesPerView={1}
         loop={true}
         autoplay={{ delay: 3000 }}
         modules={[Autoplay]}
         speed={2000}
+        breakpoints={{
+          320: {
+            slidesPerView: 1,
+          },
+          740: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 3,
+          },
+        }}
       >
         {testimonials.map((t, index) => (
           <SwiperSlide key={index}>
-            <div
-              
-              className="h-[250px] mb-5 rounded-2xl border border-base-content/5 bg-base-100 p-6 shadow-xs transition hover:shadow-lg"
-            >
+            <div className="h-[282px] sm:h-[250px] mb-5 rounded-2xl border border-base-content/5 bg-base-100 p-6 shadow-xs transition hover:shadow-lg">
               {/* Header */}
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">

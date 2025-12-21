@@ -1,11 +1,7 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FaListUl } from "react-icons/fa";
 import { HiOutlineUsers } from "react-icons/hi";
-import {
-  LuBox,
-  LuGitPullRequestArrow,
-  LuUserRound,
-} from "react-icons/lu";
+import { LuBox, LuGitPullRequestArrow, LuUserRound } from "react-icons/lu";
 import { MdAddCircleOutline } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 import { AuthContext } from "../../provider/AuthProvider";
@@ -15,71 +11,92 @@ import { Toaster } from "react-hot-toast";
 const DashboardLayout = () => {
   const { user, userRole } = useContext(AuthContext);
 
+  // for theme control
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    const html = document.querySelector("html");
+    html.setAttribute("data-theme", savedTheme);
+  }, []);
+
   const drawerList = () =>
     userRole === "hr" ? (
       <>
         <li>
-          <NavLink to='/dashboard' className={({ isActive }) => `${isActive && "text-secondary"}`}>
-            <button
-            className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-            data-tip="Asset List"
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => `${isActive && "text-secondary"}`}
           >
-            <FaListUl size={14} className="my-2"/>
-            <span className="is-drawer-close:hidden">Asset List</span>
-          </button>
+            <button
+              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+              data-tip="Asset List"
+            >
+              <FaListUl size={14} className="my-2" />
+              <span className="is-drawer-close:hidden">Asset List</span>
+            </button>
           </NavLink>
         </li>
 
         <li>
-          <NavLink to='/add-asset' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-            <button
-            className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-            data-tip="Add Asset"
+          <NavLink
+            to="/add-asset"
+            className={({ isActive }) => `${isActive && "text-secondary"}`}
           >
-            <MdAddCircleOutline size={18} className="my-2"/>
+            <button
+              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+              data-tip="Add Asset"
+            >
+              <MdAddCircleOutline size={18} className="my-2" />
 
-            <span className="is-drawer-close:hidden">Add Asset</span>
-          </button>
+              <span className="is-drawer-close:hidden">Add Asset</span>
+            </button>
           </NavLink>
         </li>
 
         <li>
-          <NavLink to='/all-request' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-            <button
-            className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-            data-tip="All Requests"
+          <NavLink
+            to="/all-request"
+            className={({ isActive }) => `${isActive && "text-secondary"}`}
           >
-            <LuGitPullRequestArrow size={16} className="my-2"/>
+            <button
+              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+              data-tip="All Requests"
+            >
+              <LuGitPullRequestArrow size={16} className="my-2" />
 
-            <span className="is-drawer-close:hidden">All Requests</span>
-          </button>
+              <span className="is-drawer-close:hidden">All Requests</span>
+            </button>
           </NavLink>
         </li>
 
         <li>
-          <NavLink to='/employee-list' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-            <button
-            className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-            data-tip=" Employee List"
+          <NavLink
+            to="/employee-list"
+            className={({ isActive }) => `${isActive && "text-secondary"}`}
           >
-            <HiOutlineUsers size={18} className="my-2" />
+            <button
+              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+              data-tip=" Employee List"
+            >
+              <HiOutlineUsers size={18} className="my-2" />
 
-            <span className="is-drawer-close:hidden">Employee List</span>
-          </button>
+              <span className="is-drawer-close:hidden">Employee List</span>
+            </button>
           </NavLink>
-          
         </li>
 
         <li>
-          <NavLink to='/upgrade-package' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-            <button
-            className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-            data-tip="Upgrade Package"
+          <NavLink
+            to="/upgrade-package"
+            className={({ isActive }) => `${isActive && "text-secondary"}`}
           >
-            <LuBox size={18} className="my-2"/>
+            <button
+              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+              data-tip="Upgrade Package"
+            >
+              <LuBox size={18} className="my-2" />
 
-            <span className="is-drawer-close:hidden">Upgrade Package</span>
-          </button>
+              <span className="is-drawer-close:hidden">Upgrade Package</span>
+            </button>
           </NavLink>
         </li>
       </>
@@ -87,36 +104,47 @@ const DashboardLayout = () => {
       userRole === "employee" && (
         <>
           <li>
-            <NavLink to='/dashboard' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-              <button
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-              data-tip="My Assets"
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => `${isActive && "text-secondary"}`}
             >
-              <BiPlanet size={18}  className="my-2"/>
-              <span className="is-drawer-close:hidden">My Assets</span>
-            </button>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+                data-tip="My Assets"
+              >
+                <BiPlanet size={18} className="my-2" />
+                <span className="is-drawer-close:hidden">My Assets</span>
+              </button>
             </NavLink>
           </li>
           <li>
-            <NavLink to='/request-asset' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-              <button
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-              data-tip="Request an Assets"
+            <NavLink
+              to="/request-asset"
+              className={({ isActive }) => `${isActive && "text-secondary"}`}
             >
-              <LuGitPullRequestArrow size={16}  className="my-2"/>
-              <span className="is-drawer-close:hidden">Request an Assets</span>
-            </button>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+                data-tip="Request an Assets"
+              >
+                <LuGitPullRequestArrow size={16} className="my-2" />
+                <span className="is-drawer-close:hidden">
+                  Request an Assets
+                </span>
+              </button>
             </NavLink>
           </li>
           <li>
-            <NavLink to='/my-team' className={({ isActive })=> `${isActive && "text-secondary"}`}>
-              <button
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-              data-tip="My Team"
+            <NavLink
+              to="/my-team"
+              className={({ isActive }) => `${isActive && "text-secondary"}`}
             >
-              <HiOutlineUsers size={18}  className="my-2"/>
-              <span className="is-drawer-close:hidden">My Team</span>
-            </button>
+              <button
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+                data-tip="My Team"
+              >
+                <HiOutlineUsers size={18} className="my-2" />
+                <span className="is-drawer-close:hidden">My Team</span>
+              </button>
             </NavLink>
           </li>
         </>
@@ -153,17 +181,12 @@ const DashboardLayout = () => {
           <div className="px-4">Dashboard</div>
         </nav>
         {/* Page content here */}
-            {/* ==================================================================================== */}
+        {/* ==================================================================================== */}
 
-            <Outlet></Outlet>
-            <Toaster></Toaster>
+        <Outlet></Outlet>
+        <Toaster></Toaster>
 
-
-
-            {/* ==================================================================================== */}
-
-        
-
+        {/* ==================================================================================== */}
       </div>
 
       <div className="drawer-side is-drawer-close:overflow-visible">
@@ -206,16 +229,21 @@ const DashboardLayout = () => {
             {/* List item */}
             {user && (
               <li>
-                <NavLink to='/profile' className={({ isActive }) => `${isActive && "text-secondary"}`}>
-                    <button
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
-                  data-tip="My Profile"
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    `${isActive && "text-secondary"}`
+                  }
                 >
-                  {/* Settings icon */}
-                  <LuUserRound size={18}  className="my-2"/>
+                  <button
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right flex gap-2 items-center"
+                    data-tip="My Profile"
+                  >
+                    {/* Settings icon */}
+                    <LuUserRound size={18} className="my-2" />
 
-                  <span className="is-drawer-close:hidden">My Profile</span>
-                </button>
+                    <span className="is-drawer-close:hidden">My Profile</span>
+                  </button>
                 </NavLink>
               </li>
             )}
