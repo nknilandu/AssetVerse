@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../../provider/AuthProvider";
-import Swal from "sweetalert2";
 import { IoPlanetOutline } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
+import Swal from "sweetalert2";
 
 const RequestAsset = () => {
   const { user } = useContext(AuthContext);
+
   const [selectedAsset, setSelectedAsset] = useState(null);
   const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
@@ -39,12 +40,10 @@ const RequestAsset = () => {
     },
   });
 
-  console.log(totalPage);
-  //   console.log(user)
+  // console.log(assets)
 
   // Submit request
   const onSubmit = async (data) => {
-    // console.log("data:", data, selectedAsset);
     if (!selectedAsset) return;
     setLoading(true);
 

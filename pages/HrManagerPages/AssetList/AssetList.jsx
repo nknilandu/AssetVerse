@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { FiBox, FiSearch } from "react-icons/fi";
+import { useContext, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import { IoPlanetOutline } from "react-icons/io5";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
@@ -9,30 +8,47 @@ import Swal from "sweetalert2";
 import { NavLink } from "react-router";
 import PieChartAsset from "./components/PieChartAsset/PieChartAsset";
 import BarChartAsset from "./components/BarChartAsset/BarChartAsset";
+import { useQuery } from "@tanstack/react-query";
 
 const AssetList = () => {
   const { user } = useContext(AuthContext);
-  const [assetsData, setAssetsData] = useState([]);
-  const [stateLoading, setStateLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`http://localhost:2031/assets?email=${user.email}`, {
-      headers: {
-        authorization: `Bearer ${user.accessToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setAssetsData(data.assetData);
-        setStateLoading(false);
-      })
-      .catch((e) => {
-        setStateLoading(false);
-        toast.error("Could not fatch data");
-        console.log(e);
-      });
-  }, [user]);
+  const [totalAsset, setTotalAsset] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [search, setSearch] = useState("");
 
+  const {
+    data: assetsData = [],
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["AllAssetListHr", user, currentPage, search],
+    queryFn: async () => {
+      const res = await fetch(
+        `http://localhost:2031/assets?email=${user.email}&limit=10&skip=${
+          currentPage * 10
+        }&search=${search.trim()}`,
+        {
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+      const result = await res.json();
+      setTotalAsset(result.totalData);
+      setTotalPage(Math.ceil(result.totalData / 10));
+      return result.assetData;
+    },
+  });
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearch(e.target.search.value);
+    setCurrentPage(0);
+  };
+
+  // delete item
   const hanldeDelete = (id) => {
     // console.log(id)
 
@@ -69,8 +85,7 @@ const AssetList = () => {
                 draggable: false,
               });
               // ============ update ui
-              const filterAssets = assetsData.filter((item) => item._id !== id);
-              setAssetsData(filterAssets);
+              refetch();
             } else {
               // error
               Swal.fire({
@@ -84,31 +99,6 @@ const AssetList = () => {
         // ===========
       }
     });
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const searchText = e.target.search.value;
-    // console.log(searchText)
-
-    fetch(
-      `http://localhost:2031/assets?email=${user.email}&search=${searchText}`,
-      {
-        headers: {
-          authorization: `Bearer ${user.accessToken}`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setAssetsData(data);
-        setStateLoading(false);
-      })
-      .catch((e) => {
-        setStateLoading(false);
-        toast.error("Could not fatch data");
-        console.log(e);
-      });
   };
 
   return (
@@ -147,26 +137,23 @@ const AssetList = () => {
                 type="text"
                 name="search"
                 placeholder="Search anything"
-                className="input text-sm py-2 pl-12 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                className="input text-sm py-2 pl-12 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
-            <button
-              disabled={stateLoading}
-              className="btn btn-primary rounded-md"
-            >
+            <button disabled={isLoading} className="btn btn-primary rounded-md">
               Search
             </button>
           </form>
           <div className="flex justify-center items-center gap-2">
             <IoPlanetOutline size={20} />
-            <p>Total {assetsData.length} Assets found</p>
+            <p>Total {totalAsset} Assets found</p>
           </div>
           {/* =============== */}
         </div>
       </div>
       {/* ================ table =================== */}
 
-      {stateLoading ? (
+      {isLoading ? (
         <LoadingComponent></LoadingComponent>
       ) : assetsData.length === 0 ? (
         <NoDataFound></NoDataFound>
@@ -191,7 +178,7 @@ const AssetList = () => {
             <tbody>
               {assetsData.map((asset, index) => (
                 <tr key={asset._id}>
-                  <th>{index + 1}</th>
+                  <th>{index + 1 + currentPage * 10}</th>
 
                   {/* Asset image + name */}
                   <td>
@@ -228,6 +215,25 @@ const AssetList = () => {
               ))}
             </tbody>
           </table>
+
+          {/* ============= pagination =============== */}
+          <div className="flex items-center justify-center m-6">
+            <div className="join">
+              {[...Array(totalPage).keys()].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    setCurrentPage(item);
+                  }}
+                  className={`join-item btn ${
+                    currentPage === item && "btn-secondary"
+                  }`}
+                >
+                  {item + 1}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
