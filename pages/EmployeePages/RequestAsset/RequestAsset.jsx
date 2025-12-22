@@ -24,7 +24,7 @@ const RequestAsset = () => {
     queryKey: ["RequestAssetEmployee", user, currentPage, search],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/assets?quantity=true&limit=10&skip=${
+        `https://asset-verse-server-chi.vercel.app/assets?quantity=true&limit=10&skip=${
           currentPage * 10
         }&search=${search.trim()}`,
         {
@@ -49,7 +49,7 @@ const RequestAsset = () => {
     if (!selectedAsset) return;
     setLoading(true);
 
-    fetch("http://localhost:2031/requests", {
+    fetch("https://asset-verse-server-chi.vercel.app/requests", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

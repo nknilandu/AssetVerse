@@ -14,7 +14,7 @@ export default function MyTeam() {
     queryKey: ["allCompanyData", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/employeeAffiliations?employeeEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/employeeAffiliations?employeeEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -37,7 +37,7 @@ export default function MyTeam() {
     queryKey: ["companyAffiliationData", user, selectedCompanyId],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/employeeAffiliations/companyAffiliations?affiliationId=${selectedCompanyId}&employeeEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/employeeAffiliations/companyAffiliations?affiliationId=${selectedCompanyId}&employeeEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,

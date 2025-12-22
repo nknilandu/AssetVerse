@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import LoadingComponent from "../../../components/LoadingComponent/LoadingComponent";
 import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 import { useQuery } from "@tanstack/react-query";
+// import { useReactToPrint } from "react-to-print";
 
 const MyAssets = () => {
   const { user } = useContext(AuthContext);
@@ -19,7 +20,7 @@ const MyAssets = () => {
     queryKey: ["myAssets", user?.email, search, filterType],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/requests/?requesterEmail=${user.email}&search=${search}&assetType=${filterType}`,
+        `https://asset-verse-server-chi.vercel.app/requests/?requesterEmail=${user.email}&search=${search}&assetType=${filterType}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -27,7 +28,7 @@ const MyAssets = () => {
         }
       );
       const result = await res.json();
-      if(result.data) {
+      if (result.data) {
         return result.data;
       }
     },
@@ -49,7 +50,7 @@ const MyAssets = () => {
       }
 
       const res = await fetch(
-        `http://localhost:2031/requests/return/${requestId}`,
+        `https://asset-verse-server-chi.vercel.app/requests/return/${requestId}`,
         {
           method: "PATCH",
           headers: {
@@ -75,6 +76,12 @@ const MyAssets = () => {
       }
     });
   };
+
+  // const printRef = useRef();
+  // const handlePrint = useReactToPrint({
+  //   content: () => printRef.current,
+  //   documentTitle: "User-Report",
+  // });
 
   // Handle print
   const handlePrint = () => {
@@ -135,8 +142,12 @@ const MyAssets = () => {
       ) : assets.length === 0 ? (
         <NoDataFound></NoDataFound>
       ) : (
-        <div className="overflow-x-auto" id="printArea">
-          <table className="table table-zebra w-full">
+        <div
+          className="overflow-x-auto"
+          id="printArea"
+          // ref={printRef}
+        >
+          <table className="table table-zebra w-full ">
             <thead>
               <tr>
                 <th>Image</th>

@@ -24,7 +24,7 @@ const UpdateAsset = () => {
     queryKey: ["updateAssetSingleData", user, id],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/assets?email=${user.email}&id=${id}`,
+        `https://asset-verse-server-chi.vercel.app/assets?email=${user.email}&id=${id}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -61,7 +61,7 @@ const UpdateAsset = () => {
     };
 
     //  ====================
-    fetch(`http://localhost:2031/assets/${assetData._id}`, {
+    fetch(`https://asset-verse-server-chi.vercel.app/assets/${assetData._id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",

@@ -76,7 +76,7 @@ const EmployeeRegister = () => {
               toast.success("profile updated");
 
               // add data at database
-              fetch("http://localhost:2031/users", {
+              fetch("https://asset-verse-server-chi.vercel.app/users", {
                 method: "POST",
                 headers: {
                   "content-type": "application/json",

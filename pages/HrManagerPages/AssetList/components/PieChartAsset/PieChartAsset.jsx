@@ -20,7 +20,7 @@ const PieChartAsset = () => {
     queryKey: ["assetPieChart", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/analytics/asset-types?hrEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/analytics/asset-types?hrEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,

@@ -39,7 +39,7 @@ const AddAsset = () => {
         const photoLink = result.data.display_url;
 
         // get hr company name
-        fetch(`http://localhost:2031/users?email=${user.email}`, {
+        fetch(`https://asset-verse-server-chi.vercel.app/users?email=${user.email}`, {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
           },
@@ -63,7 +63,7 @@ const AddAsset = () => {
             };
 
             //updoad data in server
-            fetch("http://localhost:2031/assets", {
+            fetch("https://asset-verse-server-chi.vercel.app/assets", {
               method: "POST",
               headers: {
                 "content-type": "application/json",

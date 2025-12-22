@@ -15,7 +15,7 @@ const Profile = () => {
     queryKey: ["userAffiliations", user.email],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/employeeAffiliations?employeeEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/employeeAffiliations?employeeEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -72,7 +72,7 @@ const Profile = () => {
     });
 
     const updateUsers = await fetch(
-      `http://localhost:2031/users?email=${user.email}`,
+      `https://asset-verse-server-chi.vercel.app/users?email=${user.email}`,
       {
         method: "PATCH",
         headers: {

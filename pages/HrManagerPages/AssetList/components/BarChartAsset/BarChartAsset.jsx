@@ -20,7 +20,7 @@ const BarChartAsset = () => {
     queryKey: ["assetBarChart", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/analytics/top-assets?hrEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/analytics/top-assets?hrEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,

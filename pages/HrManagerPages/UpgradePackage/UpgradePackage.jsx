@@ -11,7 +11,7 @@ export default function UpgradePackage() {
     queryKey: ["checkUserPlan", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/users?email=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/users?email=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -29,7 +29,7 @@ export default function UpgradePackage() {
   } = useQuery({
     queryKey: ["upgradePlan", user, subscription],
     queryFn: async () => {
-      const res = await fetch("http://localhost:2031/packages", {
+      const res = await fetch("https://asset-verse-server-chi.vercel.app/packages", {
         headers: {
           authorization: `Bearer ${user.accessToken}`,
         },
@@ -51,7 +51,7 @@ export default function UpgradePackage() {
 
     // console.log(paymentInfo)
 
-    fetch("http://localhost:2031/checkout-session", {
+    fetch("https://asset-verse-server-chi.vercel.app/checkout-session", {
       method: "POST",
       headers: {
         "content-type": "application/json",

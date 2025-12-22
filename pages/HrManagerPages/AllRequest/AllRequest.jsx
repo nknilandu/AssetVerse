@@ -17,7 +17,7 @@ const AllRequest = () => {
     queryKey: ["allRequest", user, statusFilter],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/requests/hr?hrEmail=${user.email}&status=${statusFilter}`,
+        `https://asset-verse-server-chi.vercel.app/requests/hr?hrEmail=${user.email}&status=${statusFilter}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -48,7 +48,7 @@ const AllRequest = () => {
 
       // patch data
       const res = await fetch(
-        `http://localhost:2031/requests/status/${id}`,
+        `https://asset-verse-server-chi.vercel.app/requests/status/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -85,7 +85,7 @@ const AllRequest = () => {
 
         // patch data
       const res = await fetch(
-        `http://localhost:2031/requests/status/${id}`,
+        `https://asset-verse-server-chi.vercel.app/requests/status/${id}`,
         {
           method: "PATCH",
           headers: {

@@ -16,7 +16,7 @@ const PaymentSuccess = () => {
   useEffect(() => {
     if (sessionId) {
       fetch(
-        `http://localhost:2031/verify-payment-success?session_id=${sessionId}`,
+        `https://asset-verse-server-chi.vercel.app/verify-payment-success?session_id=${sessionId}`,
         {
           method: "PATCH",
           headers: {

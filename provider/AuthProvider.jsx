@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
       if (user) {
-        fetch(`http://localhost:2031/users?email=${user.email}`, {
+        fetch(`https://asset-verse-server-chi.vercel.app/users?email=${user.email}`, {
           headers: {
             Authorization: `Bearer ${user.accessToken}`,
           }

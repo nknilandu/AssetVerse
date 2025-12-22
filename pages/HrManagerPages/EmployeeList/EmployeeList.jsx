@@ -18,7 +18,7 @@ const EmployeeList = () => {
     queryKey: ["myEmployeeList", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/employeeAffiliations/hr?hrEmail=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/employeeAffiliations/hr?hrEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -37,7 +37,7 @@ const EmployeeList = () => {
     queryKey: ["myPackageLimit", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/users?email=${user.email}`,
+        `https://asset-verse-server-chi.vercel.app/users?email=${user.email}`,
         {
           headers: { authorization: `Bearer ${user.accessToken}` },
         }
@@ -60,7 +60,7 @@ const EmployeeList = () => {
     }).then(async (confirm) => {
       if (confirm.isConfirmed) {
         const res = await fetch(
-          `http://localhost:2031/employeeAffiliations/${employeeEmail}`,
+          `https://asset-verse-server-chi.vercel.app/employeeAffiliations/${employeeEmail}`,
           {
             method: "DELETE",
             headers: { authorization: `Bearer ${user.accessToken}` },

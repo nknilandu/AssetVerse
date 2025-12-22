@@ -26,7 +26,7 @@ const AssetList = () => {
     queryKey: ["AllAssetListHr", user, currentPage, search],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/assets/hr?email=${user.email}&limit=10&skip=${
+        `https://asset-verse-server-chi.vercel.app/assets/hr?email=${user.email}&limit=10&skip=${
           currentPage * 10
         }&search=${search.trim()}`,
         {
@@ -70,7 +70,7 @@ const AssetList = () => {
       if (result.isConfirmed) {
         // ======================= delete user
         // console.log(id)
-        fetch(`http://localhost:2031/assets/${id}`, {
+        fetch(`https://asset-verse-server-chi.vercel.app/assets/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
