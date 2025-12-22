@@ -15,8 +15,8 @@ HR Managers and Employees.
 
 ## 🔗 Live Link
 
--   Frontend → will be give
--   Backend → will be give
+-   Frontend → https://asset-verse-com.netlify.app/
+-   Backend  → https://asset-verse-server-chi.vercel.app/
 
 
 ## ✨ Features
@@ -52,6 +52,6 @@ Node.js, Express.js, MongoDB, Firebase, Stripe
 
 ## 📤 Deployment site
 
--   Frontend → https://www.netlify.com/
--   Backend → https://vercel.com/nilandus-projects
+-   Frontend → https://asset-verse-com.netlify.app/
+-   Backend  → https://asset-verse-server-chi.vercel.app/
 
