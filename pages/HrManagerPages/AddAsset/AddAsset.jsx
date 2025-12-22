@@ -39,9 +39,14 @@ const AddAsset = () => {
         const photoLink = result.data.display_url;
 
         // get hr company name
-        fetch(`http://localhost:2031/users?email=${user.email}`)
+        fetch(`http://localhost:2031/users?email=${user.email}`, {
+          headers: {
+            authorization: `Bearer ${user.accessToken}`,
+          },
+        })
           .then((res) => res.json())
           .then((temp) => {
+            // console.log(temp)
             const companyName = temp.companyName;
             const companyLogo = temp.companyLogo;
 
@@ -68,6 +73,7 @@ const AddAsset = () => {
             })
               .then((res) => res.json())
               .then((data) => {
+                console.log(data);
                 if (data.insertedId) {
                   // success
                   setStateLoading(false);
@@ -81,6 +87,15 @@ const AddAsset = () => {
                   });
                 } else {
                   // not success
+                  setStateLoading(false);
+                  console.error(data.message);
+                  Swal.fire({
+                    theme: "auto",
+                    title: "Error! Couldn't upload data at database.",
+                    icon: "error",
+                    draggable: false,
+                  });
+                  return;
                 }
               })
               .catch((e) => {

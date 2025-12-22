@@ -18,7 +18,7 @@ const EmployeeList = () => {
     queryKey: ["myEmployeeList", user],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/employeeAffiliations?hrEmail=${user.email}`,
+        `http://localhost:2031/employeeAffiliations/hr?hrEmail=${user.email}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -27,7 +27,9 @@ const EmployeeList = () => {
       );
 
       const data = await res.json();
-      return data;
+      if (Array.isArray(data)) {
+        return data;
+      }
     },
   });
 
@@ -65,7 +67,7 @@ const EmployeeList = () => {
           }
         );
         const result = await res.json();
-        console.log(result);
+        // console.log(result);
 
         if (result.deletedCount) {
           Swal.fire("Removed!", "Employee has been removed.", "success");
@@ -83,7 +85,7 @@ const EmployeeList = () => {
       <title>Employee List | AssetVerse</title>
       <div className="w-full mb-10">
         <h2 className="text-3xl font-bold text-foreground mb-2">
-          All Request Asset
+          My Employee List
         </h2>
         <p className="text-muted-foreground">
           Discover quality products from trusted suppliers worldwide

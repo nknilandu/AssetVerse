@@ -17,7 +17,7 @@ const AllRequest = () => {
     queryKey: ["allRequest", user, statusFilter],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/requests?hrEmail=${user.email}&status=${statusFilter}`,
+        `http://localhost:2031/requests/hr?hrEmail=${user.email}&status=${statusFilter}`,
         {
           headers: {
             authorization: `Bearer ${user.accessToken}`,
@@ -25,7 +25,9 @@ const AllRequest = () => {
         }
       );
       const result = await res.json();
-      return result;
+      if(result.data) {
+        return result.data;
+      }
     },
   });
 
@@ -93,6 +95,7 @@ const AllRequest = () => {
           body: JSON.stringify({
             requestStatus: "rejected",
             approvalDate: new Date(),
+            processedBy: user.email,
           }),
         }
       );

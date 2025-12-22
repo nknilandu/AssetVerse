@@ -227,7 +227,7 @@ const DashboardLayout = () => {
             {drawerList()}
 
             {/* List item */}
-            {user && (
+            {user && userRole && (
               <li>
                 <NavLink
                   to="/profile"

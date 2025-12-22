@@ -34,13 +34,15 @@ const RequestAsset = () => {
         }
       );
       const result = await res.json();
-      setTotalAsset(result.totalData);
-      setTotalPage(Math.ceil(result.totalData / 10));
-      return result.assetData;
+      if(result.count){
+        setTotalAsset(result.count);
+        setTotalPage(Math.ceil(result.count / 10));
+      }
+      return result.data;
     },
   });
 
-  // console.log(assets)
+  // console.log(assets, totalPage)
 
   // Submit request
   const onSubmit = async (data) => {
@@ -100,6 +102,7 @@ const RequestAsset = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(e.target.search.value);
+    setTotalAsset(0);
     setCurrentPage(0);
   };
 
@@ -191,7 +194,7 @@ const RequestAsset = () => {
           </div>
           {/* ============= pagination =============== */}
           <div className="flex items-center justify-center m-6">
-            <div className="join">
+            <div className="join flex flex-wrap items-center justify-center">
               {[...Array(totalPage).keys()].map((item) => (
                 <button
                   key={item}
@@ -232,7 +235,7 @@ const RequestAsset = () => {
             />
             <button
               type="submit"
-              className={`btn btn-primary w-full ${loading && "loading"}`}
+              className={`btn btn-primary w-full`}
               disabled={loading}
             >
               {loading ? "Submitting..." : "Submit Request"}

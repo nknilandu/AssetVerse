@@ -72,12 +72,12 @@ const UpdateAsset = () => {
       .then((res) => res.json())
       .then((result) => {
         setStateLoading(false);
-        // console.log(data)
         if (result.modifiedCount) {
+          // console.log(result)
           // success
           Swal.fire({
             theme: "auto",
-            title: "Successfully Product Updated!",
+            title: "Successfully Assets Updated!",
             icon: "success",
             draggable: false,
           });
@@ -85,6 +85,7 @@ const UpdateAsset = () => {
       })
       .catch((e) => {
         console.log(e);
+        setStateLoading(false);
         // error
         Swal.fire({
           theme: "auto",

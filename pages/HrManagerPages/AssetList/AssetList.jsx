@@ -26,7 +26,7 @@ const AssetList = () => {
     queryKey: ["AllAssetListHr", user, currentPage, search],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:2031/assets?email=${user.email}&limit=10&skip=${
+        `http://localhost:2031/assets/hr?email=${user.email}&limit=10&skip=${
           currentPage * 10
         }&search=${search.trim()}`,
         {
@@ -36,15 +36,20 @@ const AssetList = () => {
         }
       );
       const result = await res.json();
-      setTotalAsset(result.totalData);
-      setTotalPage(Math.ceil(result.totalData / 10));
-      return result.assetData;
-    },
+      if(result.count){
+        setTotalAsset(result.count);
+        setTotalPage(Math.ceil(result.count / 10));
+      }
+      // console.log(result)
+      return result.data;
+    }
   });
+
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(e.target.search.value);
+    setTotalAsset(0);
     setCurrentPage(0);
   };
 
@@ -69,8 +74,7 @@ const AssetList = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${user.accessToken}`,
-            email: user.email,
+            authorization: `Bearer ${user.accessToken}`
           },
         })
           .then((res) => res.json())
@@ -218,7 +222,7 @@ const AssetList = () => {
 
           {/* ============= pagination =============== */}
           <div className="flex items-center justify-center m-6">
-            <div className="join">
+            <div className="join  flex flex-wrap items-center justify-center">
               {[...Array(totalPage).keys()].map((item) => (
                 <button
                   key={item}

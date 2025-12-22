@@ -14,7 +14,7 @@ import LoadingComponent from "../../../../../components/LoadingComponent/Loading
 const PieChartAsset = () => {
   
   const { user } = useContext(AuthContext);
-  const COLORS = ["#3b82f6", "#f97316"];
+  const COLORS = ["#3b82f6", "#f59e0b"];
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["assetPieChart", user],
@@ -28,7 +28,9 @@ const PieChartAsset = () => {
         }
       );
       const result = await res.json();
-      return result;
+      if (Array.isArray(result)) {
+        return result;
+      }
     },
   });
 

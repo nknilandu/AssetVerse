@@ -26,8 +26,10 @@ const MyAssets = () => {
           },
         }
       );
-      const data = await res.json();
-      return data;
+      const result = await res.json();
+      if(result.data) {
+        return result.data;
+      }
     },
   });
 

@@ -28,9 +28,14 @@ const BarChartAsset = () => {
         }
       );
       const result = await res.json();
-      return result;
+      if (Array.isArray(result)) {
+        return result;
+      }
+      
     },
   });
+
+  // console.log(data)
 
   return (
     <div>

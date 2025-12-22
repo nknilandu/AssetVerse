@@ -53,7 +53,11 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
       if (user) {
-        fetch(`http://localhost:2031/users?email=${user.email}`)
+        fetch(`http://localhost:2031/users?email=${user.email}`, {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+          }
+        })
           .then((res) => res.json())
           .then((data) => {
             setUserRole(data.role || null);
