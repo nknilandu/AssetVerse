@@ -55,3 +55,7 @@ Node.js, Express.js, MongoDB, Firebase, Stripe
 -   Frontend → Netlify -> https://asset-verse-com.netlify.app/
 -   Backend  → Vercel  -> https://asset-verse-server-chi.vercel.app/
 
+## 📸 Preview
+
+![HERO.IO Landing Page](./proj1.png)
+
