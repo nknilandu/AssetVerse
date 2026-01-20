@@ -26,14 +26,19 @@ import UpgradePackage from "../pages/HrManagerPages/UpgradePackage/UpgradePackag
 import RequestAsset from "../pages/EmployeePages/RequestAsset/RequestAsset";
 import MyTeam from "../pages/EmployeePages/MyTeam/MyTeam";
 import UpdateAsset from "../pages/HrManagerPages/UpdateAsset/UpdateAsset";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import PaymentSuccess from "../pages/HrManagerPages/UpgradePackage/PaymentSuccess/PaymentSuccess";
 import PaymentCancelled from "../pages/HrManagerPages/UpgradePackage/PaymentCancelled/PaymentCancelled";
 import LegalPages from "../components/LegalPages/LegalPages";
-
+import AboutUs from "../components/LegalPages/components/AboutUs/AboutUs";
+import ContactUs from "../components/LegalPages/components/ContactUs/ContactUs";
+import HelpSupport from "../components/LegalPages/components/HelpSupport/HelpSupport";
+import TermsOfUse from "../components/LegalPages/components/TermsOfUse/TermsOfUse";
+import PrivacyPolicy from "../components/LegalPages/components/PrivacyPolicy/PrivacyPolicy";
+import CookiePolicy from "../components/LegalPages/components/CookiePolicy/CookiePolicy";
+import AssetManagement from "../components/LegalPages/components/AssetManagement/AssetManagement";
+import AnalyticsReporting from "../components/LegalPages/components/AnalyticsReporting/AnalyticsReporting";
+import WorkflowAutomation from "../components/LegalPages/components/WorkflowAutomation/WorkflowAutomation";
 
 const router = createBrowserRouter([
   {
@@ -48,11 +53,49 @@ const router = createBrowserRouter([
       {
         path: "/legal",
         Component: LegalPages,
+        children: [
+          {
+            index: true,
+            Component: AboutUs,
+          },
+          {
+            path: "contact",
+            Component: ContactUs,
+          },
+          {
+            path: "help&support",
+            Component: HelpSupport,
+          },
+          {
+            path: "termofuse",
+            Component: TermsOfUse,
+          },
+          {
+            path: "privacy",
+            Component: PrivacyPolicy,
+          },
+          {
+            path: "cookie",
+            Component: CookiePolicy,
+          },
+          {
+            path: "asset-management",
+            Component: AssetManagement,
+          },
+          {
+            path: "analytics-reporting",
+            Component: AnalyticsReporting,
+          },
+          {
+            path: "workflow-automation",
+            Component: WorkflowAutomation,
+          },
+        ],
       },
       {
         path: "*",
         Component: PageNotFound,
-      }
+      },
     ],
   },
   {
@@ -62,21 +105,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        Component: Login
+        Component: Login,
       },
       {
         path: "employee-registration",
-        Component: EmployeeRegister
+        Component: EmployeeRegister,
       },
       {
         path: "hr-registration",
-        Component: HrRegister
+        Component: HrRegister,
       },
       {
         path: "forgot-password",
-        Component: ForgotPassword
+        Component: ForgotPassword,
       },
-      
+
       {
         path: "*",
         Component: PageNotFound,
@@ -85,75 +128,97 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <PrivateRoute>
-      <DashboardLayout></DashboardLayout>
-    </PrivateRoute>,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     errorElement: <AppNotFound></AppNotFound>,
     children: [
       {
         path: "dashboard",
-        Component: Dashboard
+        Component: Dashboard,
       },
       {
         path: "add-asset",
-        element: <AdminRoute>
-          <AddAsset></AddAsset>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <AddAsset></AddAsset>
+          </AdminRoute>
+        ),
       },
       {
         path: "update-asset/:id",
-        element: <AdminRoute>
-          <UpdateAsset></UpdateAsset>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <UpdateAsset></UpdateAsset>
+          </AdminRoute>
+        ),
       },
       {
         path: "all-request",
-        element: <AdminRoute>
-          <AllRequest></AllRequest>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <AllRequest></AllRequest>
+          </AdminRoute>
+        ),
       },
-      
+
       {
         path: "employee-list",
-        element: <AdminRoute>
-          <EmployeeList></EmployeeList>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <EmployeeList></EmployeeList>
+          </AdminRoute>
+        ),
       },
       {
         path: "upgrade-package",
-        element: <AdminRoute>
-          <UpgradePackage></UpgradePackage>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <UpgradePackage></UpgradePackage>
+          </AdminRoute>
+        ),
       },
       {
         path: "dashboard/payment-success",
-        element: <AdminRoute>
-          <PaymentSuccess></PaymentSuccess>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <PaymentSuccess></PaymentSuccess>
+          </AdminRoute>
+        ),
       },
       {
         path: "dashboard/payment-cancelled",
-        element: <AdminRoute>
-          <PaymentCancelled></PaymentCancelled>
-        </AdminRoute>
+        element: (
+          <AdminRoute>
+            <PaymentCancelled></PaymentCancelled>
+          </AdminRoute>
+        ),
       },
       {
         path: "request-asset",
-        element: <PrivateRoute>
-          <RequestAsset></RequestAsset>
-        </PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <RequestAsset></RequestAsset>
+          </PrivateRoute>
+        ),
       },
       {
         path: "my-team",
-        element: <PrivateRoute>
-          <MyTeam></MyTeam>
-        </PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyTeam></MyTeam>
+          </PrivateRoute>
+        ),
       },
       {
         path: "profile",
-        element: <PrivateRoute>
-          <Profile></Profile>
-        </PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <Profile></Profile>
+          </PrivateRoute>
+        ),
       },
       {
         path: "*",
@@ -164,14 +229,14 @@ const router = createBrowserRouter([
 ]);
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );

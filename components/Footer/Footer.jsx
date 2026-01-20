@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../../src/assets/logo.png";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 import { RiLinkedinFill } from "react-icons/ri";
-import { Link as ScrollLink } from "react-scroll";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -12,7 +12,7 @@ const Footer = () => {
           <aside className="flex-2">
             <img src={logo} className="grayscale" alt="logo" />
             <p className="text-2xl font-bold">AssetVerse </p>
-            <p>
+            <p className="max-w-xs">
               {" "}
               Streamline your corporate asset management with intelligent
               tracking, automated workflows, and real-time analytics.
@@ -49,82 +49,39 @@ const Footer = () => {
           </aside>
           <nav className="flex-1">
             <h6 className="footer-title">Services</h6>
-            <a className="link link-hover">Branding</a>
-            <a className="link link-hover">Design</a>
-            <a className="link link-hover">Marketing</a>
-            <a className="link link-hover">Advertisement</a>
-          </nav>
+            <Link to="/legal/asset-management" className="link link-hover">
+              Asset Management
+            </Link>
+            <Link to="/legal/analytics-reporting" className="link link-hover">
+              Analytics & Reporting
+            </Link>
+            <Link to="/legal/workflow-automation" className="link link-hover">
+              Workflow Automation
+            </Link>
+             </nav>
           <nav className="flex-1">
             <h6 className="footer-title">Company</h6>
-            <ScrollLink
-              to="about"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            <Link to="/legal" className="link link-hover">
               About us
-            </ScrollLink>
-            <ScrollLink
-              to="contact"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            </Link>
+            <Link to="/legal/contact" className="link link-hover">
               Contact us
-            </ScrollLink>
-            <ScrollLink
-              to="helpsupport"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            </Link>
+            <Link to="/legal/help&support" className="link link-hover">
               Help & Support
-            </ScrollLink>
+            </Link>
           </nav>
           <nav className="flex-1">
             <h6 className="footer-title">Legal</h6>
-            <ScrollLink
-              to="term"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            <Link to="/legal/termofuse" className="link link-hover">
               Terms of use
-            </ScrollLink>
-            <ScrollLink
-              to="privacy"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            </Link>
+            <Link to="/legal/privacy" className="link link-hover">
               Privacy policy
-            </ScrollLink>
-            <ScrollLink
-              to="cookie"
-              smooth
-              offset={-60}
-              duration={500}
-              // activeClass="underline"
-              spy
-              className="link link-hover"
-            >
+            </Link>
+            <Link to="/legal/cookie" className="link link-hover">
               Cookie policy
-            </ScrollLink>
+            </Link>
           </nav>
         </footer>
       </div>
