@@ -1,4 +1,4 @@
-# 🚀 AssetVerse -- Corporate Asset Management System
+# 🚀 AssetVerse - Corporate Asset Management System
 
 AssetVerse is a modern, enterprise-grade web application designed to
 help companies manage their internal assets efficiently.\
@@ -52,6 +52,10 @@ Node.js, Express.js, MongoDB, Firebase, Stripe
 
 ## 📤 Deployment site
 
--   Frontend → https://asset-verse-com.netlify.app/
--   Backend  → https://asset-verse-server-chi.vercel.app/
+-   Frontend → Netlify -> https://asset-verse-com.netlify.app/
+-   Backend  → Vercel  -> https://asset-verse-server-chi.vercel.app/
+
+## 📸 Preview
+
+![HERO.IO Landing Page](./proj1.png)
 
