@@ -32,6 +32,7 @@ import {
 } from '@tanstack/react-query'
 import PaymentSuccess from "../pages/HrManagerPages/UpgradePackage/PaymentSuccess/PaymentSuccess";
 import PaymentCancelled from "../pages/HrManagerPages/UpgradePackage/PaymentCancelled/PaymentCancelled";
+import LegalPages from "../components/LegalPages/LegalPages";
 
 
 const router = createBrowserRouter([
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "/legal",
+        Component: LegalPages,
       },
       {
         path: "*",

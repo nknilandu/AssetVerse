@@ -15,7 +15,7 @@ const Navbar = () => {
   // console.log(user, loading, userRole)
 
   const navList = (userRole) => (
-    <ul className="flex flex-col lg:flex-row gap-3 lg:gap-10">
+    <ul className="flex flex-col lg:flex-row gap-3 lg:gap-6">
       {userRole && (
         <li className="hover:text-secondary">
           <Link to="/dashboard">Dashboard</Link>
