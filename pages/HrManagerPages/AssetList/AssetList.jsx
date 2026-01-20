@@ -229,7 +229,7 @@ const AssetList = () => {
                   onClick={() => {
                     setCurrentPage(item);
                   }}
-                  className={`join-item btn ${
+                  className={`join-item btn btn-sm ${
                     currentPage === item && "btn-secondary"
                   }`}
                 >
