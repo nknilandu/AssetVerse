@@ -25,6 +25,8 @@ const Login = () => {
 
   const [showPass, setShowPass] = useState(false);
   const [stateLoading, setStateLoading] = useState(false);
+  const [stateLoadingEm, setStateLoadingEm] = useState(false);
+  const [stateLoadingHr, setStateLoadingHr] = useState(false);
 
   const togglePassword = () => {
     setShowPass(!showPass);
@@ -57,6 +59,58 @@ const Login = () => {
     //
     //
     //
+  };
+
+  // demo Employee Login
+  const hanldeDemoEmployee = () => {
+    const mail = "betaboox@gmail.com";
+    const pass = "Nk12345678";
+
+    setStateLoadingEm(true);
+    loginUser(mail, pass)
+      .then((res) => {
+        // success
+
+        const user = res.user;
+        setUser(user);
+        toast.success("Successfully Loged in.");
+        navigate(`${location.state ? location.state : "/"}`);
+
+        setStateLoadingEm(false);
+      })
+      .catch((e) => {
+        // error
+        console.log(e.message);
+        toast.error(e.message);
+
+        setStateLoadingEm(false);
+      });
+  };
+
+  // demo Hr Login
+  const hanldeDemoHr = () => {
+    const mail = "nknilandu@gmail.com";
+    const pass = "Nk12345678";
+
+    setStateLoadingHr(true);
+    loginUser(mail, pass)
+      .then((res) => {
+        // success
+
+        const user = res.user;
+        setUser(user);
+        toast.success("Successfully Loged in.");
+        navigate(`${location.state ? location.state : "/"}`);
+
+        setStateLoadingHr(false);
+      })
+      .catch((e) => {
+        // error
+        console.log(e.message);
+        toast.error(e.message);
+
+        setStateLoadingHr(false);
+      });
   };
 
   return (
@@ -176,40 +230,78 @@ const Login = () => {
                   "Log in"
                 )}
               </button>
-
-              {/* Divider */}
-              <div className="flex items-center justify-center mt-5">
-                <div className="border-t border-gray-200 flex-1"></div>
-                <span className="px-4 text-base-content/50 text-sm">Or</span>
-                <div className="border-t border-gray-200 flex-1"></div>
-              </div>
-
-              <div className="text-center mt-3">
-                <p className="text-base-content/50 mb-4">
-                  Don't you have an account?
-                </p>
-                <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
-                  <Link to={stateLoading || "/employee-registration"}>
-                    <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
-                      <LuUser size={20} className="text-warning" />
-                      <p className="text-md font-semibold mt-2">Employee</p>
-                      <p className="text-sm text-base-content/50">
-                        Create your account to request company assets
-                      </p>
-                    </div>
-                  </Link>
-                  <Link to={stateLoading || "/hr-registration"}>
-                    <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
-                      <LuShieldCheck size={20} className="text-info" />
-                      <p className="text-md font-semibold mt-2">HR Manager</p>
-                      <p className="text-sm text-base-content/50">
-                        Register your company and start managing assets
-                      </p>
-                    </div>
-                  </Link>
-                </div>
-              </div>
             </form>
+            {/* ========= Demo Login ============= */}
+
+            <div>
+              <p className="text-base-content/50 text-center mt-5">
+                Demo Login
+              </p>
+              <div className="flex flex-col md:flex-row gap-3">
+                <button
+                  onClick={hanldeDemoEmployee}
+                  disabled={stateLoadingEm}
+                  className={`w-full border border-primary/50 p-2 mt-2 hover:bg-primary/50 text-black font-md rounded-lg transition-colors ${
+                    stateLoadingEm ? " bg-primary/50" : "bg-primary/5"
+                  }`}
+                >
+                  {stateLoadingEm ? (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  ) : (
+                    "Employee Login"
+                  )}
+                </button>
+                {/* ========== */}
+                <button
+                  onClick={hanldeDemoHr}
+                  disabled={stateLoadingHr}
+                  className={`w-full border border-primary/50 p-2 md:mt-2 hover:bg-primary/50 text-black font-md rounded-lg transition-colors ${
+                    stateLoadingHr ? " bg-primary/50" : "bg-primary/5"
+                  }`}
+                >
+                  {stateLoadingHr ? (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  ) : (
+                    "HR Login"
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* ====================== */}
+
+            {/* Divider */}
+            <div className="flex items-center justify-center mt-5">
+              <div className="border-t border-gray-200 flex-1"></div>
+              <span className="px-4 text-base-content/50 text-sm">Or</span>
+              <div className="border-t border-gray-200 flex-1"></div>
+            </div>
+
+            <div className="text-center mt-3">
+              <p className="text-base-content/50 mb-4">
+                Don't you have an account?
+              </p>
+              <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
+                <Link to={stateLoading || "/employee-registration"}>
+                  <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
+                    <LuUser size={20} className="text-warning" />
+                    <p className="text-md font-semibold mt-2">Employee</p>
+                    <p className="text-sm text-base-content/50">
+                      Create your account to request company assets
+                    </p>
+                  </div>
+                </Link>
+                <Link to={stateLoading || "/hr-registration"}>
+                  <div className="flex-1 border border-base-content/20 hover:border-primary hover:bg-primary/10 transition-all rounded-lg px-2 py-4 w-full flex flex-col items-center justify-center">
+                    <LuShieldCheck size={20} className="text-info" />
+                    <p className="text-md font-semibold mt-2">HR Manager</p>
+                    <p className="text-sm text-base-content/50">
+                      Register your company and start managing assets
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
           {/* ++++++++++++++++++++++++++++++++++++++++++++++++ */}
           <div className="divider divider-vertical md:divider-horizontal  md:mt-20"></div>
